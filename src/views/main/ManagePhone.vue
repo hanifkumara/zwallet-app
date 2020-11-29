@@ -1,0 +1,88 @@
+<template>
+  <div class="content">
+    <h4>Change Phone Number</h4>
+    <p class="add-at">Add at least one phone number for the transfer ID so you can start transfering your money to another user.</p>
+    <div class="input-container">
+      <div class="input-phone">
+        <img src="@/assets/img/form/filled/phone.png" alt="phone-icon">
+        <input type="text" v-model="data.phone" :placeholder="dataUser.phone">
+      <button class="btn" @click="$emit('update-data', data)" >Add Phone Number</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+export default {
+  name: 'ManagePhone',
+  data: function () {
+    return {
+      dataUser: [],
+      data: {
+        phone: null,
+        idUser: this.$route.params.idUser
+      }
+    }
+  },
+  mounted () {
+    this.getUserId()
+  },
+  methods: {
+    async getUserId () {
+      try {
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.data.idUser}`)
+        const resData = result.data.result[0]
+        this.dataUser = resData
+        console.log(resData)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.add-at{
+  font-size: 13px;
+  width: 50%;
+  margin: 30px 0;
+}
+.input-container{
+  margin: 130px 0;
+  display:flex;
+  align-items: center;
+  flex-direction: column;
+}
+.input-phone{
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.input-phone>input {
+  padding: 10px 40px;
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid #6379F4;
+}
+.input-phone>input:focus {
+  outline: none;
+}
+.input-phone>img{
+  position: absolute;
+  left: 5px;
+  top: 12px;
+}
+.input-phone>button{
+  margin-top: 60px;
+  color: #fff;
+  padding: 12px 0;
+  width: 100%;
+  background: #6379F4;
+  box-shadow: 0px 6px 75px rgba(100, 87, 87, 0.05);
+  border-radius: 12px;
+}
+</style>
