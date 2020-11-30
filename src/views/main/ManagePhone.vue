@@ -63,7 +63,7 @@ export default {
   align-items: center;
 }
 .input-phone>input {
-  padding: 10px 40px;
+  padding: 8px 60px;
   width: 100%;
   border: none;
   border-bottom: 1.5px solid #6379F4;
@@ -84,5 +84,19 @@ export default {
   background: #6379F4;
   box-shadow: 0px 6px 75px rgba(100, 87, 87, 0.05);
   border-radius: 12px;
+}
+@media screen and (max-width: 767px) {
+  .add-at{
+    width: 80%;
+    margin: 15px 0;
+  }
+  .input-phone{
+    width: 70%;
+  }
+}
+@media screen and (max-width: 540px) {
+  .input-phone{
+    width: 90%;
+  }
 }
 </style>

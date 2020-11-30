@@ -3,8 +3,8 @@
     <div class="balance">
       <div class="balance-left">
         <p>Balance</p>
-        <h3 style="color: white; margin: 10px 0">Rp.12.0000</h3>
-        <p>+62 3949 3943 9348</p>
+        <h3 style="color: white; margin: 10px 0">Rp.{{user.balance}}</h3>
+        <p>+{{user.phone}}</p>
       </div>
       <div class="balance-right">
         <router-link :to="{name: 'Transaction'}" class="balance-transfer">
@@ -70,11 +70,13 @@ export default {
   data: function () {
     return {
       idSender: 3,
-      receiver: []
+      receiver: [],
+      user: []
     }
   },
   mounted () {
     this.getTransactionBySender()
+    this.getUser()
   },
   methods: {
     async getTransactionBySender () {
@@ -83,6 +85,16 @@ export default {
       this.receiver = resData.slice(0, 4)
       console.log(this.idReceiver)
       console.log(resData)
+    },
+    async getUser () {
+      try {
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.idSender}`)
+        const resData = result.data.result
+        this.user = resData[0]
+        console.log(this.user)
+      } catch (error) {
+        console.log(error.message)
+      }
     }
   }
 }

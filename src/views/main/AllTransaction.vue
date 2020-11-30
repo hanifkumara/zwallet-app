@@ -4,7 +4,7 @@
       <h5>Search Receiver</h5>
       <div class="sorting">
         <button class="badge badge-primary" @click="longest">Longest</button>
-        <button class="badge  badge-sucess" @click="latest">Latest</button>
+        <button class="badge  badge-primary" @click="latest">Latest</button>
       </div>
     </div>
     <div class="input-search">
@@ -13,27 +13,27 @@
       </div>
       <input type="text" placeholder="Search receiver here" v-model="inputText">
     </div>
-    <router-link :to="{name : 'Detail', params : {idUser: 1}}">
-      <div class="card-container">
-        <div class="card-receiver" v-for="data in filteredTransaction" :key="data.id">
-          <div class="d-flex">
-            <div class="photo-receiver">
-              <img :src="data.receiverPhoto" alt="photo-receiver">
-            </div>
-            <div class="name-phone">
-              <h6>{{data.receiver}}</h6>
-              <p>+{{data.phoneReceiver}}</p>
-            </div>
+    <div class="card-container">
+      <div class="card-receiver" v-for="data in filteredTransaction" :key="data.id">
+        <div class="d-flex">
+          <div class="photo-receiver">
+            <img :src="data.receiverPhoto" alt="photo-receiver">
           </div>
-          <div class="right-card">
+          <div class="name-phone">
+            <h6>{{data.receiver}}</h6>
+            <p>+{{data.phoneReceiver}}</p>
+          </div>
+        </div>
+        <div class="right-card">
+          <div class="delete">
             <button class="badge badge-danger" ref="deleteCard" @click="deleteTransaction(data.id)">Hapus</button>
-            <div class="data-receiver">
-              {{data.createdAt}}
-            </div>
+          </div>
+          <div class="data-receiver">
+            {{data.createdAt}}
           </div>
         </div>
       </div>
-    </router-link>
+    </div>
   </div>
 </template>
 
@@ -83,6 +83,9 @@ export default {
 </script>
 
 <style scoped>
+a:hover{
+  text-decoration: none;
+}
 .input-search {
   margin: 30px 0;
   width: 100%;
@@ -110,7 +113,6 @@ export default {
   height: 100%;
 }
 .card-receiver{
-  position: relative;
   width: 100%;
   padding: 10px 20px;
   background: #FFFFFF;
@@ -136,19 +138,19 @@ export default {
 }
 .name-phone > p {
   margin: 0;
-  color: #7A7886;
+  color: black !important;
   font-size: 14px;
+}.name-phone> h6{
+  color: black !important;
+}
+.data-receiver{
+  color: black !important;
 }
 .card-container{
-  height: 365px;
+  height: 372px;
   overflow: auto;
 }
-button.badge-danger {
-  position: absolute;
-  right: 10px;
-  top: 20px;
-}
-button.badge {
+.sorting > button.badge {
   border: none;
   margin-right: 10px;
 }
@@ -157,5 +159,18 @@ button.badge:hover {
 }
 button.badge:focus {
   outline: none;
+}
+button.badge-danger{
+  border: none;
+}
+.delete{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+@media screen and (max-width: 360px) {
+  /* .card-container{
+    overflow-x: hidden;
+  } */
 }
 </style>

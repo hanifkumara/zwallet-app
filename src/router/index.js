@@ -27,7 +27,7 @@ const routes = [
   {
     path: '/',
     name: 'Auth',
-    redirect: '/login',
+    redirect: 'login',
     component: Auth,
     children: [
       {
@@ -51,7 +51,7 @@ const routes = [
     path: '/main',
     name: 'Main',
     component: Main,
-    redirect: '/main/home',
+    redirect: 'main/home',
     children: [
       {
         path: 'transaction',
@@ -103,7 +103,6 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

@@ -4,15 +4,19 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12 wrapper-nav">
-          <h3>Zwallet</h3>
-          <div class="profile-nav">
-            <div class="icon-profile">
-              <img :src='photo' alt="photo">
-            </div>
-            <div class="name-phone">
-              <h5>{{name}}</h5>
-              <p class="text-small">+{{phone}}</p>
-            </div>
+          <router-link :to="{name: 'Home'}">
+            <h3>Zwallet</h3>
+          </router-link>
+            <div class="profile-nav">
+              <router-link :to="{name: 'Profile'}">
+                <div class="icon-profile">
+                <img :src='photo' alt="photo">
+              </div>
+              </router-link>
+              <div class="name-phone">
+                <h5>{{name}}</h5>
+                <p class="text-small">+{{phone}}</p>
+              </div>
             <div class="icon-bell">
               <img src="../../../src/assets/img/icon/bell.png" alt="bell">
             </div>
@@ -29,7 +33,7 @@
             <router-link :to="{name: 'Home'}">
               <div class="icon">
                 <img src="../../../src/assets/img/icon/grid.png" alt="icon-dashbord">
-                <h6>Dashboard</h6>
+                <h6 >Dashboard</h6>
               </div>
             </router-link>
             <router-link :to="{name: 'Transaction'}">
@@ -147,6 +151,9 @@ export default {
   background-color: #f6f9ff;
   height: 100%;
 }
+a:hover{
+  text-decoration: none;
+}
 nav {
   width: 100%;
   background: #FFFFFF;
@@ -165,6 +172,10 @@ h3 {
 .profile-nav{
   display: flex;
   height: 80px;
+}
+.profile-nav>a{
+  display: flex;
+  align-items:center;
 }
 .icon-profile{
   align-self: center;
@@ -268,7 +279,7 @@ footer{
 /* End Footer */
 
 /* Responsive */
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 991px) {
   .content{
     margin-top: 20px;
   }

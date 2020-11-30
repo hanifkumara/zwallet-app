@@ -13,7 +13,7 @@
     <div class="type-amount">Type the amount you want to transfer and then press continue to the next steps</div>
     <div class="input-amount">
       <input type="text" name="amount" placeholder="0.00" v-model="data.amount" autocomplete="off">
-      <h6>Rp. 120.000 Available</h6>
+      <h6>Rp. {{dataSender.balance}} Available</h6>
       <div class="add-notes">
         <input type="text" name="notes" placeholder="add some notes" v-model="data.notes" autocomplete="off">
       </div>
@@ -31,6 +31,7 @@ export default {
   data: function () {
     return {
       dataReceiver: [],
+      dataSender: [],
       data: {
         amount: '',
         notes: '',
@@ -43,6 +44,7 @@ export default {
   mounted () {
     this.getDate()
     this.getUser()
+    this.getDataSender()
   },
   methods: {
     getDate () {
@@ -56,6 +58,15 @@ export default {
       const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.data.userReceiverId}`)
       const resData = result.data.result[0]
       this.dataReceiver = resData
+    },
+    async getDataSender () {
+      try {
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.data.userSenderId}`)
+        const resData = result.data.result
+        this.dataSender = resData[0]
+      } catch (error) {
+        console.log(error.message)
+      }
     }
   }
 }

@@ -55,7 +55,7 @@ export default {
 .we-got{
   font-size: 13px;
   margin: 40px 0;
-  width: 45%;
+  width: 80%;
 }
 .card-personal{
   margin-top: 40px;

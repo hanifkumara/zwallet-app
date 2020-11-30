@@ -15,12 +15,10 @@
       <p class="phone desc">Amount</p>
       <h5>Rp.{{transaction[0].amount}}</h5>
     </div>
-
-    <div class="receiver detail">
+<!-- <div class="receiver detail">
       <p class="phone desc">Balance Left</p>
       <h5>Rp.100.000</h5>
-    </div>
-
+    </div> -->
     <div class="receiver detail">
       <p class="phone desc">Date & Time</p>
       <h5>{{transaction[0].date}}</h5>
@@ -69,7 +67,7 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 20px 25px;
+  padding: 11px 18px;
   margin-bottom: 20px;
 }
 .detail{

@@ -75,7 +75,7 @@ export default {
   border-radius: 10px;
 }
 .profile-content {
-  margin-top: 30px;
+  margin: 55px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,6 +116,10 @@ export default {
 @media screen and (max-width: 720px) {
   .edit-button{
     width: 80%;
+  }
+  .card-button{
+    margin-bottom: 20px;
+    padding: 8px;
   }
 }
 </style>

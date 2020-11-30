@@ -14,7 +14,9 @@
             </div>
         </form>
         <a href="#" class="forgot-password">Forgot password ?</a>
-        <Button title="Login"/>
+        <router-link :to="{name: 'Home'}">
+          <Button title="Login"/>
+        </router-link>
         <div class="login-signup">Don’t have an account? Let’s <router-link to="signup" style="padding-left: 10px"> Sign Up</router-link></div>
     </div>
 </template>
