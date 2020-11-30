@@ -65,11 +65,19 @@ export default {
       console.log(this.dataReceiver[0].id)
     },
     async deleteTransaction (id) {
-      const confirm = window.confirm('Are you sure??')
-      if (confirm === true) {
-        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
-      } else {
-        console.log('Not Delete')
+      try {
+        const confirm = window.confirm('Are you sure??')
+        if (confirm === true) {
+          await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
+          const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}`)
+          const resData = result.data.result
+          this.dataReceiver = resData
+          console.log(this.dataReceiver)
+        } else {
+          console.log('Not Delete')
+        }
+      } catch (error) {
+        console.log(error.message)
       }
     },
     longest () {
