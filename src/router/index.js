@@ -7,7 +7,6 @@ import SignUp from '../views/auth/SignUp.vue'
 import Addpin from '../views/auth/Addpin.vue'
 import Main from '../views/main/Main.vue'
 import Transaction from '../views/main/Transaction.vue'
-import Confirmation from '../views/main/Confirmation.vue'
 import Home from '../views/main/Home.vue'
 import Profile from '../views/main/Profile.vue'
 import Receiver from '../views/main/Receiver.vue'
@@ -19,6 +18,10 @@ import Detail from '../views/main/Detail.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/*',
+    component: 404
+    },
   {
     path: '/learn',
     name: 'Learn',
@@ -72,11 +75,6 @@ const routes = [
         path: 'receiver',
         name: 'Receiver',
         component: Receiver
-      },
-      {
-        path: 'confirmation/:id/confirm',
-        name: 'Confirmation',
-        component: Confirmation
       },
       {
         path: 'alltransaction/:idUser/history',

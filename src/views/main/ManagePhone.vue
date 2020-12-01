@@ -6,7 +6,7 @@
       <div class="input-phone">
         <img src="@/assets/img/form/filled/phone.png" alt="phone-icon">
         <input type="text" v-model="data.phone" :placeholder="dataUser.phone">
-      <button class="btn" @click="$emit('update-data', data)" >Add Phone Number</button>
+      <button class="btn" @click="$emit('update-data', data)" >Update Phone Number</button>
       </div>
     </div>
   </div>

@@ -17,15 +17,15 @@
       <div class="add-notes">
         <input type="text" name="notes" placeholder="add some notes" v-model="data.notes" autocomplete="off">
       </div>
-      <router-link :to="{name: 'Confirmation', params: {id: data.userReceiverId}}">
-        <button class="btn" @click="$emit('save-data', data)" >Continue</button>
-      </router-link>
+      <button class="btn" v-on:click.prevent="addTransaction">Continue</button>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
   name: 'Transaction',
   data: function () {
@@ -64,6 +64,25 @@ export default {
         const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.data.userSenderId}`)
         const resData = result.data.result
         this.dataSender = resData[0]
+      } catch (error) {
+        console.log(error.message)
+      }
+    },
+    async addTransaction () {
+      try {
+        const dataTransaction = {
+          amountTransfer: this.data.amount,
+          notes: this.data.notes,
+          userSenderId: this.data.userSenderId,
+          userReceiverId: this.data.userReceiverId
+        }
+        await axios.post(`${process.env.VUE_APP_SERVICE_API}/transaction`, dataTransaction)
+        Swal.fire(
+          'Transaction Sucess!',
+          'You clicked the button!',
+          'success'
+        )
+        this.$router.push({ name: 'Home' })
       } catch (error) {
         console.log(error.message)
       }

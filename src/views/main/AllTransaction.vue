@@ -33,19 +33,25 @@
           </div>
         </div>
       </div>
+      <button class="btn">Kembali</button>
+      <button class="btn" @click="lanjut">lanjut</button>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
   name: 'AllTransaction',
   data: function () {
     return {
       idSender: this.$route.params.idUser,
       dataReceiver: [],
-      inputText: ''
+      paginate: [],
+      inputText: '',
+      page: 1
     }
   },
   computed: {
@@ -56,26 +62,38 @@ export default {
   },
   mounted () {
     this.getDataTransaction()
+    console.log(this.page)
   },
   methods: {
+    lanjut () {
+      this.page += 1
+      console.log(this.page)
+    },
     async getDataTransaction () {
-      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}`)
-      const resData = result.data.result
-      this.dataReceiver = resData
-      console.log(this.dataReceiver[0].id)
+      try {
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}?page=${this.page}`)
+        const paginate = result.data.pagination
+        const resData = result.data.result
+        this.dataReceiver = resData
+        this.paginate = paginate
+        console.log(this.paginate)
+        console.log(this.dataReceiver)
+      } catch (error) {
+        console.log(error.message)
+      }
     },
     async deleteTransaction (id) {
       try {
-        const confirm = window.confirm('Are you sure??')
-        if (confirm === true) {
-          await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
-          const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}`)
-          const resData = result.data.result
-          this.dataReceiver = resData
-          console.log(this.dataReceiver)
-        } else {
-          console.log('Not Delete')
-        }
+        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
+        Swal.fire(
+          'Delete Sucess!',
+          'You clicked the button!',
+          'success'
+        )
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}`)
+        const resData = result.data.result
+        this.dataReceiver = resData
+        console.log(this.dataReceiver)
       } catch (error) {
         console.log(error.message)
       }
@@ -155,8 +173,7 @@ a:hover{
   color: black !important;
 }
 .card-container{
-  height: 372px;
-  overflow: auto;
+  height: fit-content;
 }
 .sorting > button.badge {
   border: none;

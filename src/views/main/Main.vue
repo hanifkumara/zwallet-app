@@ -59,7 +59,7 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <router-view v-on:fire-event="addTransaction" v-on:save-data="saveData" v-on:update-data="updateData"/>
+          <router-view v-on:update-data="updateData"/>
         </div>
       </div>
     </div>
@@ -85,6 +85,8 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
   name: 'Main',
   data: function () {
@@ -110,36 +112,21 @@ export default {
         console.log(e.message)
       }
     },
-    async addTransaction (data) {
-      try {
-        const detailTransaction = this.$store.state.data[0].value
-        const dataTransaction = {
-          amountTransfer: detailTransaction.amount,
-          notes: detailTransaction.notes,
-          userSenderId: detailTransaction.userSenderId,
-          userReceiverId: detailTransaction.userReceiverId
-        }
-        await axios.post(`${process.env.VUE_APP_SERVICE_API}/transaction`, dataTransaction)
-        alert('Transaction Success')
-        this.$router.push({ name: 'Home' })
-      } catch (error) {
-        console.log(error.message)
-      }
-    },
     async updateData (data) {
       try {
         const dataUpdate = {
           phone: data.phone
         }
         await axios.patch(`${process.env.VUE_APP_SERVICE_API}/users/${data.idUser}`, dataUpdate)
-        alert('Update Sucess')
+        Swal.fire(
+          'Updated Sucess!',
+          'You clicked the button!',
+          'success'
+        )
         this.$router.go(-1)
       } catch (error) {
         console.log(error.message)
       }
-    },
-    saveData (value) {
-      this.$store.state.data.push({ value })
     }
   }
 }
