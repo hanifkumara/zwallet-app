@@ -103,7 +103,7 @@ export default {
   methods: {
     async getUser () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.idUser}`)
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idUser}`)
         const resUser = result.data.result[0]
         this.name = resUser.name
         this.phone = resUser.phone
@@ -117,7 +117,7 @@ export default {
         const dataUpdate = {
           phone: data.phone
         }
-        await axios.patch(`${process.env.VUE_APP_SERVICE_API}/users/${data.idUser}`, dataUpdate)
+        await axios.patch(`${process.env.VUE_APP_SERVICE_API}/v1/users/${data.idUser}`, dataUpdate)
         Swal.fire(
           'Updated Sucess!',
           'You clicked the button!',

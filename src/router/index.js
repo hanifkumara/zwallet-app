@@ -19,10 +19,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/*',
-    component: 404
-  },
-  {
     path: '/learn',
     name: 'Learn',
     component: Learn

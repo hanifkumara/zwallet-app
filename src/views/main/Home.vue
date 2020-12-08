@@ -80,15 +80,15 @@ export default {
   },
   methods: {
     async getTransactionBySender () {
-      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}`)
-      const resData = result.data.result
+      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/idSender/${this.idSender}`)
+      const resData = result.data.result.data
       this.receiver = resData.slice(0, 4)
       console.log(this.idReceiver)
       console.log(resData)
     },
     async getUser () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.idSender}`)
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idSender}`)
         const resData = result.data.result
         this.user = resData[0]
         console.log(this.user)

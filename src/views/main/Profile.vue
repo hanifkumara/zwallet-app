@@ -53,7 +53,7 @@ export default {
   methods: {
     async getUser () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.idUser}`)
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idUser}`)
         const resData = result.data.result[0]
         this.name = resData.name
         this.phone = resData.phone

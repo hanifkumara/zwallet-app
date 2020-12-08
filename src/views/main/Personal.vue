@@ -36,7 +36,7 @@ export default {
   methods: {
     async getUserId () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.idUser}`)
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idUser}`)
         const resData = result.data.result[0]
         this.form = resData
         console.log(resData)

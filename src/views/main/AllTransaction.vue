@@ -33,8 +33,12 @@
           </div>
         </div>
       </div>
-      <button class="btn">Kembali</button>
-      <button class="btn" @click="lanjut">lanjut</button>
+      <b-pagination
+        v-model="currentPages"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="itemList"
+    ></b-pagination>
     </div>
   </div>
 </template>
@@ -48,10 +52,11 @@ export default {
   data: function () {
     return {
       idSender: this.$route.params.idUser,
-      dataReceiver: [],
-      paginate: [],
       inputText: '',
-      page: 1
+      dataReceiver: [],
+      perPage: 4,
+      currentPages: 1,
+      rows: 0
     }
   },
   computed: {
@@ -62,36 +67,31 @@ export default {
   },
   mounted () {
     this.getDataTransaction()
-    console.log(this.page)
   },
   methods: {
-    lanjut () {
-      this.page += 1
-      console.log(this.page)
-    },
     async getDataTransaction () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}?page=${this.page}`)
-        const paginate = result.data.pagination
-        const resData = result.data.result
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/idSender/${this.idSender}?page=${this.currentPages}`)
+        const resData = result.data.result.data
+        const rows = result.data.result.rows
+        // this.rows = resRows
         this.dataReceiver = resData
-        this.paginate = paginate
-        console.log(this.paginate)
-        console.log(this.dataReceiver)
+        this.rows = rows
+        console.log(this.dataReceiver.id)
       } catch (error) {
         console.log(error.message)
       }
     },
     async deleteTransaction (id) {
       try {
-        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
+        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/${id}`)
         Swal.fire(
           'Delete Sucess!',
           'You clicked the button!',
           'success'
         )
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${this.idSender}`)
-        const resData = result.data.result
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/idSender/${this.idSender}`)
+        const resData = result.data.result.data
         this.dataReceiver = resData
         console.log(this.dataReceiver)
       } catch (error) {
@@ -103,6 +103,11 @@ export default {
     },
     latest () {
       this.dataReceiver.sort((a, b) => a.id < b.id ? 1 : -1)
+    }
+  },
+  watch: {
+    currentPages: function (val) {
+      this.getDataTransaction()
     }
   }
 }

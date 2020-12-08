@@ -55,13 +55,13 @@ export default {
       this.data.date = dateTime
     },
     async getUser () {
-      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.data.userReceiverId}`)
+      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.data.userReceiverId}`)
       const resData = result.data.result[0]
       this.dataReceiver = resData
     },
     async getDataSender () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${this.data.userSenderId}`)
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.data.userSenderId}`)
         const resData = result.data.result
         this.dataSender = resData[0]
       } catch (error) {
@@ -76,7 +76,7 @@ export default {
           userSenderId: this.data.userSenderId,
           userReceiverId: this.data.userReceiverId
         }
-        await axios.post(`${process.env.VUE_APP_SERVICE_API}/transaction`, dataTransaction)
+        await axios.post(`${process.env.VUE_APP_SERVICE_API}/v1/transaction`, dataTransaction)
         Swal.fire(
           'Transaction Sucess!',
           'You clicked the button!',
