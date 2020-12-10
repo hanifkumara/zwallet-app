@@ -5,40 +5,50 @@
     <div class="input-container">
       <div class="input-phone">
         <img src="@/assets/img/form/filled/phone.png" alt="phone-icon">
-        <input type="text" v-model="data.phone" :placeholder="dataUser.phone">
-      <button class="btn" @click="$emit('update-data', data)" >Update Phone Number</button>
+        <input type="text" v-model="phone" :placeholder="getUser.phone">
+      <button class="btn" @click="handleUpdate" >Update Phone Number</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
+import Swal from 'sweetalert2'
+
 export default {
   name: 'ManagePhone',
   data: function () {
     return {
       dataUser: [],
-      data: {
-        phone: null,
-        idUser: this.$route.params.idUser
-      }
+      phone: ''
     }
   },
   mounted () {
-    this.getUserId()
+    this.getDataUser()
   },
   methods: {
-    async getUserId () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.data.idUser}`)
-        const resData = result.data.result[0]
-        this.dataUser = resData
-        console.log(resData)
-      } catch (error) {
-        console.log(error.message)
+    ...mapActions(['updateProfile', 'getDataUser']),
+    handleUpdate () {
+      const payload = {
+        phone: this.phone
       }
+      this.updateProfile(payload)
+        .then(() => {
+          Swal.fire(
+            'Update Phone Success',
+            '',
+            'success'
+          )
+          this.$router.push({ name: 'Profile' })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  computed: {
+    ...mapGetters(['getUser'])
   }
 }
 </script>

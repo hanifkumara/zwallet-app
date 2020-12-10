@@ -15,7 +15,7 @@
             <div class="col-md-5">
                 <div class="wrapper-right">
                     <div class="line"></div>
-                    <router-view />
+                    <router-view v-on:login-handle="loginHandle" v-on:signup-handle="hanldeSignup" />
                 </div>
             </div>
         </div>
@@ -23,8 +23,64 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import Swal from 'sweetalert2'
+
 export default {
-  name: 'Auth'
+  name: 'Auth',
+  methods: {
+    ...mapActions(['login', 'signup']),
+    loginHandle (dataLogin) {
+      this.login(dataLogin)
+        .then(res => {
+          Swal.fire(
+            'Login Success',
+            'You clicked the button!',
+            'success'
+          )
+          this.$router.push({ name: 'Home' })
+        })
+        .catch((err) => {
+          let { message } = err.response.data.err
+          if (message === 'Email Unlisted!!') {
+            message = 'Email Unlisted!!'
+          } else {
+            message = 'Password Wrong!!'
+          }
+          Swal.fire(
+            `${message}`,
+            'Please try again!',
+            'error'
+          )
+        })
+    },
+    hanldeSignup (payload) {
+      this.signup(payload)
+        .then(res => {
+          Swal.fire(
+            'Register Success',
+            'Please check your email for verifycation!',
+            'success'
+          )
+          this.$router.push({ name: 'Login' })
+        })
+        .catch((err) => {
+          const errMessage = err.response.data.err.message
+          let message = ''
+          console.log(errMessage)
+          if (errMessage === 'Username already exist!!') {
+            message = 'Username already exist!!'
+          } else {
+            message = 'Email already exist!!'
+          }
+          Swal.fire(
+            `${message}`,
+            '',
+            'error'
+          )
+        })
+    }
+  }
 }
 </script>
 

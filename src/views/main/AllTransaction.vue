@@ -14,22 +14,24 @@
       <input type="text" placeholder="Search receiver here" v-model="inputText">
     </div>
     <div class="card-container">
-      <div class="card-receiver" v-for="data in filteredTransaction" :key="data.id">
-        <div class="d-flex">
-          <div class="photo-receiver">
-            <img :src="data.receiverPhoto" alt="photo-receiver">
+      <div class="card-content">
+        <div class="card-receiver" v-for="data in dataReceiver" :key="data.id">
+          <div class="d-flex">
+            <div class="photo-receiver">
+              <img :src="data.receiverPhoto" alt="photo-receiver">
+            </div>
+            <div class="name-phone">
+              <h6>{{data.receiver}}</h6>
+              <p>{{data.phoneReceiver}}</p>
+            </div>
           </div>
-          <div class="name-phone">
-            <h6>{{data.receiver}}</h6>
-            <p>+{{data.phoneReceiver}}</p>
-          </div>
-        </div>
-        <div class="right-card">
-          <div class="delete">
-            <button class="badge badge-danger" ref="deleteCard" @click="deleteTransaction(data.id)">Hapus</button>
-          </div>
-          <div class="data-receiver">
-            {{data.createdAt}}
+          <div class="right-card">
+            <div class="delete">
+              <button class="badge badge-danger" @click="deleteTransaction(data.id)">Hapus</button>
+            </div>
+            <div class="data-receiver">
+              {{data.createdAt}}
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +53,6 @@ export default {
   name: 'AllTransaction',
   data: function () {
     return {
-      idSender: this.$route.params.idUser,
       inputText: '',
       dataReceiver: [],
       perPage: 4,
@@ -60,10 +61,10 @@ export default {
     }
   },
   computed: {
-    filteredTransaction () {
-      const result = new RegExp(this.inputText, 'i')
-      return this.dataReceiver.filter(value => value.receiver.match(result))
-    }
+    // filteredTransaction () {
+    //   const result = new RegExp(this.inputText, 'i')
+    //   return this.dataReceiver.filter(value => value.receiver.match(result))
+    // }
   },
   mounted () {
     this.getDataTransaction()
@@ -71,27 +72,25 @@ export default {
   methods: {
     async getDataTransaction () {
       try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/idSender/${this.idSender}?page=${this.currentPages}`)
-        const resData = result.data.result.data
-        const rows = result.data.result.rows
-        // this.rows = resRows
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${this.currentPages}`)
+        const resData = result.data.result.transaction
+        const rows = result.data.result.pagination.totalData
         this.dataReceiver = resData
         this.rows = rows
-        console.log(this.dataReceiver.id)
       } catch (error) {
         console.log(error.message)
       }
     },
     async deleteTransaction (id) {
       try {
-        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/${id}`)
+        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
         Swal.fire(
           'Delete Sucess!',
           'You clicked the button!',
           'success'
         )
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/idSender/${this.idSender}`)
-        const resData = result.data.result.data
+        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender`)
+        const resData = result.data.result.transaction
         this.dataReceiver = resData
         console.log(this.dataReceiver)
       } catch (error) {
@@ -142,6 +141,9 @@ a:hover{
   object-fit: contain;
   width: 100%;
   height: 100%;
+}
+.card-content{
+  height: 390px;
 }
 .card-receiver{
   width: 100%;

@@ -10,12 +10,12 @@
             <div class="profile-nav">
               <router-link :to="{name: 'Profile'}">
                 <div class="icon-profile">
-                <img :src='photo' alt="photo">
+                <img :src='getUser.photo' alt="photo">
               </div>
               </router-link>
               <div class="name-phone">
-                <h5>{{name}}</h5>
-                <p class="text-small">+{{phone}}</p>
+                <h5>{{getUser.name}}</h5>
+                <p class="text-small">{{getUser.phone}}</p>
               </div>
             <div class="icon-bell">
               <img src="../../../src/assets/img/icon/bell.png" alt="bell">
@@ -52,14 +52,14 @@
                 <h6>Profile</h6>
               </div>
             </router-link>
-            <div class="icon-logout">
+            <div class="icon-logout" @click="handleLogout">
               <img src="../../../src/assets/img/icon/log-out.png" alt="icon-logout">
               <h6>Logout</h6>
             </div>
           </div>
         </div>
         <div class="col-lg-9">
-          <router-view v-on:update-data="updateData"/>
+          <router-view />
         </div>
       </div>
     </div>
@@ -84,50 +84,33 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 import Swal from 'sweetalert2'
 
 export default {
   name: 'Main',
-  data: function () {
-    return {
-      name: '',
-      phone: '',
-      photo: '',
-      idUser: 3
-    }
-  },
   mounted () {
-    this.getUser()
+    this.getDataUser()
   },
   methods: {
-    async getUser () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idUser}`)
-        const resUser = result.data.result[0]
-        this.name = resUser.name
-        this.phone = resUser.phone
-        this.photo = resUser.photo
-      } catch (e) {
-        console.log(e.message)
-      }
-    },
-    async updateData (data) {
-      try {
-        const dataUpdate = {
-          phone: data.phone
-        }
-        await axios.patch(`${process.env.VUE_APP_SERVICE_API}/v1/users/${data.idUser}`, dataUpdate)
-        Swal.fire(
-          'Updated Sucess!',
-          'You clicked the button!',
-          'success'
-        )
-        this.$router.go(-1)
-      } catch (error) {
-        console.log(error.message)
-      }
+    ...mapActions(['getDataUser']),
+    handleLogout () {
+      this.getDataUser()
+        .then(() => {
+          localStorage.clear()
+          Swal.fire(
+            'Logout Success',
+            'See you again!',
+            'success'
+          )
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  computed: {
+    ...mapGetters(['getUser'])
   }
 }
 </script>
@@ -174,6 +157,7 @@ h3 {
   object-fit: contain;
   height: 100%;
   width: 100%;
+  cursor: pointer;
 }
 p.text-small {
   margin: 0;
@@ -209,6 +193,7 @@ p.text-small {
 .icon-logout>h6,.icon >h6{
   font-weight: 400;
   margin-left: 20px;
+  cursor: pointer;
 }
 .icon-logout>img,.icon>img{
   object-fit: contain;

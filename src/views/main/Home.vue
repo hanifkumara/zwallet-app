@@ -3,8 +3,8 @@
     <div class="balance">
       <div class="balance-left">
         <p>Balance</p>
-        <h3 style="color: white; margin: 10px 0">Rp.{{user.balance}}</h3>
-        <p>+{{user.phone}}</p>
+        <h3 style="color: white; margin: 10px 0">Rp.{{getUser.balance}}</h3>
+        <p>{{getUser.phone}}</p>
       </div>
       <div class="balance-right">
         <router-link :to="{name: 'Transaction'}" class="balance-transfer">
@@ -42,9 +42,9 @@
       <div class="history-container">
         <div class="title-history d-flex justify-content-between">
           <h6>Transaction History</h6>
-          <router-link :to="{name: 'AllTransaction', params: {idUser: idSender}}">See all</router-link>
+          <router-link :to="{name: 'AllTransaction'}">See all</router-link>
         </div>
-        <div class="contact-card"  v-for="data in receiver" :key="data.id">
+        <div class="contact-card"  v-for="data in getTransactionSender" :key="data.id">
           <div class="card-left">
             <div class="photo">
               <img :src="data.receiverPhoto" alt="photo-profile">
@@ -64,7 +64,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Home',
   data: function () {
@@ -75,27 +76,14 @@ export default {
     }
   },
   mounted () {
-    this.getTransactionBySender()
-    this.getUser()
+    this.getDataUser()
+    this.getDataTransactionSender()
   },
   methods: {
-    async getTransactionBySender () {
-      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/transaction/idSender/${this.idSender}`)
-      const resData = result.data.result.data
-      this.receiver = resData.slice(0, 4)
-      console.log(this.idReceiver)
-      console.log(resData)
-    },
-    async getUser () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idSender}`)
-        const resData = result.data.result
-        this.user = resData[0]
-        console.log(this.user)
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
+    ...mapActions(['getDataUser', 'getDataTransactionSender'])
+  },
+  computed: {
+    ...mapGetters(['getUser', 'getTransactionSender'])
   }
 }
 </script>

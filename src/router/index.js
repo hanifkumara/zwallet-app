@@ -14,6 +14,7 @@ import Personal from '../views/main/Personal.vue'
 import ManagePhone from '../views/main/ManagePhone.vue'
 import AllTransaction from '../views/main/AllTransaction.vue'
 import Detail from '../views/main/Detail.vue'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
@@ -32,12 +33,14 @@ const routes = [
       {
         path: 'login',
         name: 'Login',
-        component: Login
+        component: Login,
+        meta: { requiresVisitor: true }
       },
       {
         path: 'signup',
         name: 'SignUp',
-        component: SignUp
+        component: SignUp,
+        meta: { requiresVisitor: true }
       },
       {
         path: 'addpin',
@@ -51,6 +54,7 @@ const routes = [
     name: 'Main',
     component: Main,
     redirect: 'main/home',
+    meta: { requiresAuth: true },
     children: [
       {
         path: 'transaction',
@@ -73,22 +77,22 @@ const routes = [
         component: Receiver
       },
       {
-        path: 'alltransaction/:idUser/history',
+        path: 'alltransaction',
         name: 'AllTransaction',
         component: AllTransaction
       },
       {
-        path: 'personal/:idUser',
+        path: 'personal',
         name: 'Personal',
         component: Personal
       },
       {
-        path: 'manage/:idUser/phone',
+        path: 'manage',
         name: 'ManagePhone',
         component: ManagePhone
       },
       {
-        path: 'detail/:idUser/transfer',
+        path: 'detail',
         name: 'Detail',
         component: Detail
       }
@@ -100,6 +104,29 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!store.getters.isLogin) {
+      next({
+        path: '/login'
+      })
+    } else {
+      next()
+    }
+  } else if (to.matched.some(record => record.meta.requiresVisitor)) {
+    if (store.getters.isLogin) {
+      next({
+        path: '/main/home'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
 })
 
 export default router

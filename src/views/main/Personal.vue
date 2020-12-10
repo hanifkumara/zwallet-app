@@ -4,46 +4,35 @@
     <p class="we-got">We got your personal information from the sign up proccess. If you want to make changes on your information, contact our support.</p>
     <div class="card-personal">
       <p>Name</p>
-      <h6>{{form.name}}</h6>
+      <h6>{{getUser.name}}</h6>
     </div>
     <div class="card-personal">
       <p>Verifed E-Mail</p>
-      <h6>{{form.email}}</h6>
+      <h6>{{getUser.email}}</h6>
     </div>
     <div class="card-personal phone">
       <div class="card-left">
         <p>Phone Number</p>
-        <h6>+{{form.phone}}</h6>
+        <h6>{{getUser.phone}}</h6>
       </div>
-      <router-link :to="{name: 'ManagePhone', params: {idUser: this.idUser}}">Manage</router-link>
+      <router-link :to="{name: 'ManagePhone'}">Manage</router-link>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Personal',
-  data: function () {
-    return {
-      idUser: this.$route.params.idUser,
-      form: []
-    }
-  },
   mounted () {
-    this.getUserId()
+    this.getDataUser()
   },
   methods: {
-    async getUserId () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idUser}`)
-        const resData = result.data.result[0]
-        this.form = resData
-        console.log(resData)
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
+    ...mapActions(['getDataUser'])
+  },
+  computed: {
+    ...mapGetters(['getUser'])
   }
 }
 </script>
@@ -58,7 +47,7 @@ export default {
   width: 80%;
 }
 .card-personal{
-  margin-top: 40px;
+  margin: 20px 0;
   width: 100%;
   height: fit-content;
   padding: 15px 20px;

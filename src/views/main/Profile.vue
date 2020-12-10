@@ -3,12 +3,12 @@
     <div class="profile-container">
       <div class="profile-content">
         <div class="profile-image">
-          <img :src="photo" alt="photo">
+          <img :src="getUser.photo" alt="photo">
         </div>
-        <h4>{{name}}</h4>
-        <p>+{{phone}}</p>
+        <h4>{{getUser.name}}</h4>
+        <p>{{getUser.phone}}</p>
         <div class="edit-button">
-          <router-link :to="{name: 'Personal', params: {idUser: idUser}}">
+          <router-link :to="{name: 'Personal'}">
             <div class="card-button">
               <h6>Personal Information</h6>
               <div class="img-arrow">
@@ -35,33 +35,18 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Profile',
-  data: function () {
-    return {
-      idUser: 3,
-      name: '',
-      photo: '',
-      phone: null
-    }
-  },
   mounted () {
-    this.getUser()
+    this.getDataUser()
   },
   methods: {
-    async getUser () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.idUser}`)
-        const resData = result.data.result[0]
-        this.name = resData.name
-        this.phone = resData.phone
-        this.photo = resData.photo
-      } catch (e) {
-        console.log(e.message)
-      }
-    }
+    ...mapActions(['getDataUser'])
+  },
+  computed: {
+    ...mapGetters(['getUser'])
   }
 }
 </script>
