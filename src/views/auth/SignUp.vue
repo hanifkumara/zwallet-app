@@ -14,7 +14,7 @@
           <div class="password">
             <img src="../../assets/img/icon/form/empty/lock.png" alt="password">
             <img src="../../assets/img/icon/form/empty/eye-crossed.png" alt="eye" @click="showPassword">
-            <input type="password" v-model="dataSignup.password" placeholder="Enter your password" id="show">
+            <input type="password" v-model="dataSignup.password" placeholder="Enter your E-password" id="show">
           </div>
           <a href="#" class="forgot-password">Forgot password ?</a>
           <Button title="Sign Up" type="submit"/>

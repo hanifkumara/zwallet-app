@@ -14,7 +14,8 @@
               </div>
               </router-link>
               <div class="name-phone">
-                <h5>{{getUser.name}}</h5>
+                <h5 v-if="!getUser.name">Hii, {{getUser.username}}</h5>
+                <h5 v-else>{{getUser.name}}</h5>
                 <p class="text-small">{{getUser.phone}}</p>
               </div>
             <div class="icon-bell">
@@ -167,6 +168,9 @@ p.text-small {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.name-phone > h5{
+  margin: 0;
 }
 .icon-bell{
   align-self: center;
