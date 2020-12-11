@@ -2,8 +2,10 @@
   <div>
     <h3>Secure Your Account, Your Wallet, and Your Data With 6 Digits PIN That You Created Yourself.</h3>
     <p class="small">Create 6 digits pin to secure all your money and your data in Zwallet app. Keep it secret and don’t tell anyone about your Zwallet account password and the PIN.</p>
-    <Pin/>
-    <Button/>
+    <form @submit.prevent="setPin">
+      <Pin/>
+      <Button title="Add PIN" type="submit"/>
+    </form>
   </div>
 </template>
 
@@ -15,6 +17,11 @@ export default {
   components: {
     Pin,
     Button
+  },
+  methods: {
+    setPin () {
+      console.log('Tes ada bos')
+    }
   }
 }
 </script>

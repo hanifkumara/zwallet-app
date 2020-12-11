@@ -10,7 +10,9 @@ export default new Vuex.Store({
     user: {},
     token: '' || localStorage.getItem('token'),
     dataUser: [],
-    getTransactionSender: []
+    getTransactionSender: [],
+    listUsers: [],
+    getUserId: []
   },
   mutations: {
     SET_USER (state, payload) {
@@ -20,11 +22,17 @@ export default new Vuex.Store({
     GET_DATA_USER (state, payload) {
       state.dataUser = payload
     },
+    GET_DATA_USER_ID (state, payload) {
+      state.getUserId = payload
+    },
     GET_TRANSACTION_SENDER (state, payload) {
       state.getTransactionSender = payload
     },
     REMOVE_TOKEN (state) {
       state.token = null
+    },
+    GET_LIST_USERS (state, payload) {
+      state.listUsers = payload
     }
   },
   actions: {
@@ -34,6 +42,32 @@ export default new Vuex.Store({
           .then(res => {
             const result = res.data.result[0]
             context.commit('GET_DATA_USER', result)
+            resolve(result)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    getListUsers (context) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/users/listusers`)
+          .then(res => {
+            const result = res.data.result
+            context.commit('GET_LIST_USERS', result)
+            resolve(result)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    getDataUserId (context, payload) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${payload}`)
+          .then(res => {
+            const result = res.data.result[0]
+            context.commit('GET_DATA_USER_ID', result)
             resolve(result)
           })
           .catch(err => {
@@ -57,6 +91,17 @@ export default new Vuex.Store({
     updateProfile (context, payload) {
       return new Promise((resolve, reject) => {
         axios.patch(`${process.env.VUE_APP_SERVICE_API}/users`, payload)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    addTransaction (context, payload) {
+      return new Promise((resolve, reject) => {
+        axios.post(`${process.env.VUE_APP_SERVICE_API}/transaction`, payload)
           .then(res => {
             resolve(res)
           })
@@ -104,7 +149,6 @@ export default new Vuex.Store({
       axios.interceptors.response.use(function (response) {
         return response
       }, function (error) {
-        console.log(error.response.data.err.message)
         if (error.response.status === 401) {
           if (error.response.data.err.message === 'Invalid Token') {
             localStorage.clear()
@@ -129,6 +173,12 @@ export default new Vuex.Store({
     },
     getTransactionSender (state) {
       return state.getTransactionSender
+    },
+    listUsers (state) {
+      return state.listUsers
+    },
+    userId (state) {
+      return state.getUserId
     }
   },
   modules: {

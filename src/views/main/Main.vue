@@ -37,7 +37,7 @@
                 <h6 >Dashboard</h6>
               </div>
             </router-link>
-            <router-link :to="{name: 'Transaction'}">
+            <router-link :to="{name: 'ListUsers'}">
               <div class="icon">
                 <img src="../../../src/assets/img/icon/arrow-up.png" alt="icon-transfer">
                 <h6>Transfer</h6>
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <router-view />
+          <router-view v-on:update-profile="hanldeUpdate" v-on:add-transaction="insertTransaction" :get-data="getUser" :user-id="userId"/>
         </div>
       </div>
     </div>
@@ -94,7 +94,26 @@ export default {
     this.getDataUser()
   },
   methods: {
-    ...mapActions(['getDataUser']),
+    ...mapActions(['getDataUser', 'updateProfile', 'addTransaction']),
+    insertTransaction (payload) {
+      console.log(payload)
+      this.addTransaction(payload)
+        .then(res => {
+          let name = this.userId.name
+          if (!name) {
+            name = this.userId.username
+          }
+          Swal.fire(
+            `Transaction to ${name}`,
+            'See you again!',
+            'success'
+          )
+          this.$router.push({ name: 'Home' })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleLogout () {
       this.getDataUser()
         .then(() => {
@@ -108,10 +127,24 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    hanldeUpdate (payload) {
+      this.updateProfile(payload)
+        .then(res => {
+          Swal.fire(
+            'Fill balance success',
+            '',
+            'success'
+          )
+          this.$router.push({ name: 'Home' })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   computed: {
-    ...mapGetters(['getUser'])
+    ...mapGetters(['getUser', 'userId'])
   }
 }
 </script>

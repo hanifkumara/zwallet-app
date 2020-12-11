@@ -3,11 +3,13 @@
     <div class="balance">
       <div class="balance-left">
         <p>Balance</p>
-        <h3 style="color: white; margin: 10px 0">Rp.{{getUser.balance}}</h3>
+        <router-link :to="{name: 'Balance'}">
+          <h3 style="color: white; margin: 10px 0">Rp. {{getUser.balance}}</h3>
+        </router-link>
         <p>{{getUser.phone}}</p>
       </div>
       <div class="balance-right">
-        <router-link :to="{name: 'Transaction'}" class="balance-transfer">
+        <router-link :to="{name: 'ListUsers'}" class="balance-transfer">
           <div class="icon-balance">
             <img src="@/assets/img/arrow-up.png" alt="icon">
           </div>
@@ -55,7 +57,7 @@
             </div>
           </div>
           <p class="amount">
-            {{data.amountTransfer}}
+            Rp.{{data.amountTransfer}}
           </p>
         </div>
       </div>

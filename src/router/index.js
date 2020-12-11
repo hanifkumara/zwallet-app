@@ -14,6 +14,8 @@ import Personal from '../views/main/Personal.vue'
 import ManagePhone from '../views/main/ManagePhone.vue'
 import AllTransaction from '../views/main/AllTransaction.vue'
 import Detail from '../views/main/Detail.vue'
+import Balance from '../views/main/Balance.vue'
+import ListUsers from '../views/main/ListUsers.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -57,11 +59,6 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: 'transaction',
-        name: 'Transaction',
-        component: Transaction
-      },
-      {
         path: 'home',
         name: 'Home',
         component: Home
@@ -95,6 +92,21 @@ const routes = [
         path: 'detail',
         name: 'Detail',
         component: Detail
+      },
+      {
+        path: 'balance',
+        name: 'Balance',
+        component: Balance
+      },
+      {
+        path: 'listusers',
+        name: 'ListUsers',
+        component: ListUsers
+      },
+      {
+        path: 'transaction/:idreceiver',
+        name: 'Transaction',
+        component: Transaction
       }
     ]
   }

@@ -3,89 +3,75 @@
     <h5 class="title">Transfer Money</h5>
     <div class="receiver">
       <div class="icon-profile">
-        <img :src="dataReceiver.photo" alt="">
+        <img :src="userId.photo" alt="">
       </div>
       <div class="name-phone">
-        <p class="name">{{dataReceiver.name}}</p>
-        <p class="phone">+{{dataReceiver.phone}}</p>
+        <p class="name">{{userId.name}}</p>
+        <p class="phone">{{userId.phone}}</p>
       </div>
     </div>
     <div class="type-amount">Type the amount you want to transfer and then press continue to the next steps</div>
     <div class="input-amount">
-      <input type="text" name="amount" placeholder="0.00" v-model="data.amount" autocomplete="off">
-      <h6>Rp. {{dataSender.balance}} Available</h6>
+      <input type="text" name="amount" v-model="dataTransaction.amountTransfer" placeholder="0.00" autocomplete="off">
+      <h6>Rp. {{getData.balance}} Available</h6>
       <div class="add-notes">
-        <input type="text" name="notes" placeholder="add some notes" v-model="data.notes" autocomplete="off">
+        <input type="text" name="notes" v-model="dataTransaction.notes" placeholder="add some notes" autocomplete="off">
       </div>
-      <button class="btn" v-on:click.prevent="addTransaction">Continue</button>
+      <button id="show-modal" @click="showModal = true">Show Modal</button>
+        <Modal :user-id="userId" :data-transaction="dataTransaction" v-on:add-transaction="insertTransaction" v-if="showModal" @close="showModal = false" />
+      <!-- <button class="btn" @click.prevent="$emit('add-transaction', dataTransaction)">Continue</button> -->
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions } from 'vuex'
+import Modal from '../../components/base/Modal.vue'
 import Swal from 'sweetalert2'
 
 export default {
   name: 'Transaction',
+  components: {
+    Modal
+  },
   data: function () {
     return {
-      dataReceiver: [],
-      dataSender: [],
-      data: {
-        amount: '',
+      idReceiver: this.$route.params.idreceiver,
+      dataTransaction: {
+        amountTransfer: '',
         notes: '',
-        userSenderId: 3,
-        userReceiverId: 7,
-        date: ''
-      }
+        userReceiverId: this.$route.params.idreceiver
+      },
+      showModal: false
     }
   },
   mounted () {
-    this.getDate()
-    this.getUser()
-    this.getDataSender()
+    this.getDataId()
   },
+  props: ['user-id', 'get-data'],
   methods: {
-    getDate () {
-      const today = new Date()
-      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
-      const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
-      const dateTime = date + ' ' + time
-      this.data.date = dateTime
+    ...mapActions(['getDataUserId', 'addTransaction']),
+    getDataId () {
+      this.getDataUserId(this.idReceiver)
     },
-    async getUser () {
-      const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.data.userReceiverId}`)
-      const resData = result.data.result[0]
-      this.dataReceiver = resData
-    },
-    async getDataSender () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/v1/users/${this.data.userSenderId}`)
-        const resData = result.data.result
-        this.dataSender = resData[0]
-      } catch (error) {
-        console.log(error.message)
-      }
-    },
-    async addTransaction () {
-      try {
-        const dataTransaction = {
-          amountTransfer: this.data.amount,
-          notes: this.data.notes,
-          userSenderId: this.data.userSenderId,
-          userReceiverId: this.data.userReceiverId
-        }
-        await axios.post(`${process.env.VUE_APP_SERVICE_API}/v1/transaction`, dataTransaction)
-        Swal.fire(
-          'Transaction Sucess!',
-          'You clicked the button!',
-          'success'
-        )
-        this.$router.push({ name: 'Home' })
-      } catch (error) {
-        console.log(error.message)
-      }
+    insertTransaction (payload) {
+      console.log(payload)
+      this.addTransaction(payload)
+        .then(res => {
+          let name = this.userId.name
+          if (!name) {
+            name = this.userId.username
+          }
+          Swal.fire(
+            `Transaction to ${name}`,
+            'See you again!',
+            'success'
+          )
+          this.$router.push({ name: 'Home' })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
