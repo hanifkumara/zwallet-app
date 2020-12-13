@@ -1,12 +1,13 @@
 <template>
   <div class="content">
-    <h4>Your balance now : Rp. {{getUser.balance}}</h4>
-    <p class="add-at">Fill your balance to make transaction easier</p>
+    <h4>Add Phone Number</h4>
+    <p class="add-at">Add at least one phone number for the transfer ID so you can start transfering your money to another user.</p>
     <div class="input-container">
       <div class="input-phone">
         <img src="@/assets/img/form/filled/phone.png" alt="phone-icon">
-        <input type="text" v-model="balance" placeholder="enter nominal">
-      <button class="btn" @click.prevent="handleTopUp" >Fill Balance</button>
+        <input type="text" v-model="phone" v-if="$route.params.phone === 'update'" :placeholder="getUser.phone">
+        <input type="text" v-model="phone2" v-if="$route.params.phone === 'add'" placeholder="Please input your secondary phone">
+      <button class="btn" @click="handleUpdate" >Add Phone Number</button>
       </div>
     </div>
   </div>
@@ -17,26 +18,43 @@ import { mapActions, mapGetters } from 'vuex'
 import Swal from 'sweetalert2'
 
 export default {
-  name: 'Balance',
-  data: () => {
+  name: 'AddPhone',
+  data: function () {
     return {
-      balance: null
+      dataUser: [],
+      phone: '',
+      phone2: ''
     }
   },
+  mounted () {
+    this.getDataUser()
+  },
   methods: {
-    ...mapActions(['updateProfile']),
-    handleTopUp () {
-      const payload = {
-        balance: this.getUser.balance + parseInt(this.balance)
+    ...mapActions(['updateProfile', 'getDataUser']),
+    handleUpdate () {
+      const phone = {
+        phone: this.phone
+      }
+      const phone2 = {
+        phone2: this.phone2
+      }
+      let payload = {}
+      if (this.phone.length > 0) {
+        payload = phone
+      } else if (this.phone2.length > 0) {
+        payload = phone2
       }
       this.updateProfile(payload)
         .then(() => {
           Swal.fire(
-            'Ehehe Boyy!!',
+            'Add Phone Success',
             '',
             'success'
           )
-          this.$router.push({ name: 'Home' })
+          this.$router.push({ name: 'Profile' })
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   },
@@ -46,7 +64,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .add-at{
   font-size: 13px;
   width: 50%;

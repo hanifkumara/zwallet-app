@@ -2,20 +2,16 @@
   <div class="content">
     <div class="d-flex justify-content-between">
       <h5>Search Receiver</h5>
-      <div class="sorting">
-        <button class="badge badge-primary" @click="longest">Longest</button>
-        <button class="badge  badge-primary" @click="latest">Latest</button>
-      </div>
     </div>
     <div class="input-search">
       <div class="icon-seacrh">
         <img src="@/assets/img/search-bar/search.png" alt="icon-search">
       </div>
-      <input type="text" placeholder="Search receiver here" v-model="inputText">
+      <input type="text" placeholder="Search receiver here" v-model="inputSearch">
     </div>
     <div class="card-container">
       <div class="card-content">
-        <div class="card-receiver" v-for="data in dataReceiver" :key="data.id">
+        <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id">
           <div class="d-flex">
             <div class="photo-receiver">
               <img :src="data.receiverPhoto" alt="photo-receiver">
@@ -27,7 +23,7 @@
           </div>
           <div class="right-card">
             <div class="delete">
-              <button class="badge badge-danger" @click="deleteTransaction(data.id)">Hapus</button>
+              <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
             </div>
             <div class="data-receiver">
               {{data.createdAt}}
@@ -35,80 +31,95 @@
           </div>
         </div>
       </div>
-      <b-pagination
-        v-model="currentPages"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="itemList"
-    ></b-pagination>
+      <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
+            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) - 1)" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+          <li v-for="noPage in getPagination.totalPage" class="page-item" :class="[noPage == getPagination.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="handleSearchSender(noPage)" href="#">{{noPage}}</a></li>
+          <li class="page-item"  :class="[getPagination.currentPage == getPagination.totalPage ? 'disabled' : '']">
+            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) + 1)" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Swal from 'sweetalert2'
+import { mapActions, mapGetters } from 'vuex'
+// import axios from 'axios'
+// import Swal from 'sweetalert2'
 
 export default {
   name: 'AllTransaction',
   data: function () {
     return {
       inputText: '',
-      dataReceiver: [],
-      perPage: 4,
-      currentPages: 1,
-      rows: 0
+      inputSearch: ''
     }
   },
-  computed: {
-    // filteredTransaction () {
-    //   const result = new RegExp(this.inputText, 'i')
-    //   return this.dataReceiver.filter(value => value.receiver.match(result))
-    // }
-  },
   mounted () {
-    this.getDataTransaction()
+    this.handleSearchSender()
   },
   methods: {
-    async getDataTransaction () {
-      try {
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${this.currentPages}`)
-        const resData = result.data.result.transaction
-        const rows = result.data.result.pagination.totalData
-        this.dataReceiver = resData
-        this.rows = rows
-      } catch (error) {
-        console.log(error.message)
+    ...mapActions(['getDataTransactionSender']),
+    handleSearchSender (pagination) {
+      const payload = {
+        pagination: pagination,
+        name: this.inputSearch
       }
-    },
-    async deleteTransaction (id) {
-      try {
-        await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
-        Swal.fire(
-          'Delete Sucess!',
-          'You clicked the button!',
-          'success'
-        )
-        const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender`)
-        const resData = result.data.result.transaction
-        this.dataReceiver = resData
-        console.log(this.dataReceiver)
-      } catch (error) {
-        console.log(error.message)
-      }
-    },
-    longest () {
-      this.dataReceiver.sort((a, b) => a.id > b.id ? 1 : -1)
-    },
-    latest () {
-      this.dataReceiver.sort((a, b) => a.id < b.id ? 1 : -1)
+      this.getDataTransactionSender(payload)
     }
   },
   watch: {
-    currentPages: function (val) {
-      this.getDataTransaction()
+    inputSearch: function (val) {
+      this.handleSearchSender()
     }
+  },
+  computed: {
+    ...mapGetters(['getPagination', 'getTransactionSender'])
   }
+  // methods: {
+  //   async getDataTransaction () {
+  //     try {
+  //       const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${this.currentPages}`)
+  //       const resData = result.data.result.transaction
+  //       const rows = result.data.result.pagination.totalData
+  //       this.dataReceiver = resData
+  //       this.rows = rows
+  //     } catch (error) {
+  //       console.log(error.message)
+  //     }
+  //   },
+  //   async deleteTransaction (id) {
+  //     try {
+  //       await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
+  //       Swal.fire(
+  //         'Delete Sucess!',
+  //         'You clicked the button!',
+  //         'success'
+  //       )
+  //       const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender`)
+  //       const resData = result.data.result.transaction
+  //       this.dataReceiver = resData
+  //       console.log(this.dataReceiver)
+  //     } catch (error) {
+  //       console.log(error.message)
+  //     }
+  //   },
+  //   longest () {
+  //     this.dataReceiver.sort((a, b) => a.id > b.id ? 1 : -1)
+  //   },
+  //   latest () {
+  //     this.dataReceiver.sort((a, b) => a.id < b.id ? 1 : -1)
+  //   }
+  // },
+  // watch: {
+  //   currentPages: function (val) {
+  //     this.getDataTransaction()
+  //   }
+  // }
 }
 </script>
 

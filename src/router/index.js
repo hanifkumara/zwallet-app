@@ -16,6 +16,9 @@ import AllTransaction from '../views/main/AllTransaction.vue'
 import Detail from '../views/main/Detail.vue'
 import Balance from '../views/main/Balance.vue'
 import ListUsers from '../views/main/ListUsers.vue'
+import AddPHone from '../views/main/AddPhone.vue'
+import Admin from '../views/main/Admin.vue'
+import Pin from '../views/main/Pin.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -102,6 +105,21 @@ const routes = [
         path: 'listusers',
         name: 'ListUsers',
         component: ListUsers
+      },
+      {
+        path: 'admin',
+        name: 'Admin',
+        component: Admin
+      },
+      {
+        path: 'pin',
+        name: 'Pin',
+        component: Pin
+      },
+      {
+        path: 'addphone/:phone',
+        name: 'AddPhone',
+        component: AddPHone
       },
       {
         path: 'transaction/:idreceiver',

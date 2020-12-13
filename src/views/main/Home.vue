@@ -15,12 +15,14 @@
           </div>
           <p>Transfer</p>
         </router-link>
+        <router-link :to="{name: 'Balance'}">
         <div class="balance-topup">
           <div class="icon-balance">
             <img src="@/assets/img/plus.png" alt="icon">
           </div>
           <p>Topup</p>
         </div>
+        </router-link>
     </div>
     </div>
     <div class="chart-history">
@@ -44,8 +46,10 @@
       <div class="history-container">
         <div class="title-history d-flex justify-content-between">
           <h6>Transaction History</h6>
-          <router-link :to="{name: 'AllTransaction'}">See all</router-link>
+          <router-link :to="{name: 'AllTransaction'}" v-if="!error">See all</router-link>
         </div>
+        <h2 v-if="error" class="error-transaction">You never have make Transaction</h2>
+        <div v-else>
         <div class="contact-card"  v-for="data in getTransactionSender" :key="data.id">
           <div class="card-left">
             <div class="photo">
@@ -60,6 +64,7 @@
             Rp.{{data.amountTransfer}}
           </p>
         </div>
+        </div>
       </div>
     </div>
   </div>
@@ -72,17 +77,29 @@ export default {
   name: 'Home',
   data: function () {
     return {
-      idSender: 3,
-      receiver: [],
-      user: []
+      error: ''
     }
   },
   mounted () {
     this.getDataUser()
-    this.getDataTransactionSender()
+    this.transactionSender()
   },
   methods: {
-    ...mapActions(['getDataUser', 'getDataTransactionSender'])
+    ...mapActions(['getDataUser', 'getDataTransactionSender']),
+    transactionSender () {
+      const payload = {
+        pagination: 1,
+        name: this.inputSearch
+      }
+      this.getDataTransactionSender(payload)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          this.error = err
+          console.log(err)
+        })
+    }
   },
   computed: {
     ...mapGetters(['getUser', 'getTransactionSender'])
@@ -196,7 +213,11 @@ export default {
   display: flex;
   align-items: center;
 }
-
+.error-transaction{
+  color: grey;
+  margin-top: 30%;
+  text-align: center;
+}
 @media screen and (max-width: 960px) {
   .balance {
     margin-top: 20px;

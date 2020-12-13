@@ -4,7 +4,19 @@
     <p class="we-got">We got your personal information from the sign up proccess. If you want to make changes on your information, contact our support.</p>
     <div class="card-personal">
       <p>Name</p>
-      <h6>{{getUser.name}}</h6>
+      <div v-if="!getUser.name">
+        <div class="change-name">
+          <h6 v-b-modal.modal-1>Please input your name here...</h6>
+          <b-modal id="modal-1" title="BootstrapVue" ok-only>
+                <div slot="modal-header">
+                  {{name}}
+                  <input class="my-4" type="text" v-model="name" placeholder="input your name">
+                </div>
+                <button slot="modal-footer" type="submit" @click.prevent="changeName">confirm</button>
+            </b-modal>
+        </div>
+      </div>
+      <h6 v-if="getUser.name">{{getUser.name}}</h6>
     </div>
     <div class="card-personal">
       <p>Verifed E-Mail</p>
@@ -22,14 +34,37 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'Personal',
+  data: () => {
+    return {
+      name: ''
+    }
+  },
   mounted () {
     this.getDataUser()
   },
   methods: {
-    ...mapActions(['getDataUser'])
+    ...mapActions(['getDataUser', 'updateProfile']),
+    changeName () {
+      const payload = {
+        name: this.name
+      }
+      this.updateProfile(payload)
+        .then(res => {
+          Swal.fire(
+            'Edit Name Success',
+            '',
+            'success'
+          )
+          this.$router.push({ name: 'Profile' })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   },
   computed: {
     ...mapGetters(['getUser'])
@@ -47,7 +82,7 @@ export default {
   width: 80%;
 }
 .card-personal{
-  margin: 20px 0;
+  margin: 34px 0;
   width: 100%;
   height: fit-content;
   padding: 15px 20px;
@@ -61,5 +96,8 @@ export default {
 }
 .card-personal p {
   margin: 0;
+}
+.change-name > h6{
+  outline: none;
 }
 </style>

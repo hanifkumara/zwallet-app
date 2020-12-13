@@ -1,7 +1,5 @@
 <template>
-  <div>
-      <button type="submit" class="btn">{{title}}</button>
-  </div>
+  <button type="submit" class="btn">{{title}}</button>
 </template>
 
 <script>
@@ -20,4 +18,8 @@ button.btn {
     background-color: rgba(169, 169, 169, 0.6);
     border-radius: 8px
 }
+button.primary{
+    background: rgb(124, 124, 255);
+    color: white;
+  }
 </style>

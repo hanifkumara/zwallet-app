@@ -13,15 +13,14 @@
 
           <div class="modal-body">
             <slot name="body">
-              {{userId.pin}}
               <input type="text" name="pin" v-model="pin">
             </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <button v-if="pin !== userId.pin" class="modal-default-button" @click="$emit('close')">Confirm</button>
-              <button v-else class="modal-default-button" @click.prevent="$emit('add-transaction', dataTransaction)">Confirm</button>
+              <button v-if="pin === myProfile.pin" class="modal-default-button" @click.prevent="$emit('add-transaction', dataTransaction, dataTransaction.amountTransfer)">Confirm</button>
+              <button v-else class="modal-default-button" @click="$emit('close')">Confirm</button>
             </slot>
           </div>
         </div>
@@ -32,6 +31,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Modal',
   data: () => {
@@ -39,7 +39,16 @@ export default {
       pin: ''
     }
   },
-  props: ['user-id', 'data-transaction']
+  props: ['my-profile', 'data-transaction'],
+  methods: {
+    ...mapActions(['getDataUser'])
+  },
+  mounted () {
+    this.getDataUser()
+  },
+  computed: {
+    ...mapGetters(['getUser'])
+  }
 }
 </script>
 

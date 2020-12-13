@@ -5,6 +5,20 @@
         <div class="profile-image">
           <img :src="getUser.photo" alt="photo">
         </div>
+        <div class="edit d-flex">
+          <div class="edit-icon mr-1">
+            <img src="@/assets/img/edit-2.png" alt="edit">
+          </div>
+          <div class="modal-edit">
+            <p v-b-modal.modal-1>edit</p>
+            <b-modal id="modal-1" title="BootstrapVue" ok-only>
+                <div slot="modal-header">
+                  <input class="my-4" @change="hanldeUpload" type="file" id="photo">
+                </div>
+                <button slot="modal-footer" type="submit" @click.prevent="handleSubmit">confirm</button>
+            </b-modal>
+          </div>
+        </div>
         <h4>{{getUser.name}}</h4>
         <p>{{getUser.phone}}</p>
         <div class="edit-button">
@@ -22,12 +36,14 @@
               <img src="@/assets/img/arrow-left.png" alt="arrow-left">
             </div>
           </div>
-          <div class="card-button">
-            <h6>Change Pin</h6>
-            <div class="img-arrow">
-              <img src="@/assets/img/arrow-left.png" alt="arrow-left">
+          <router-link :to="{name: 'Pin'}">
+            <div class="card-button">
+              <h6>Change Pin</h6>
+              <div class="img-arrow">
+                <img src="@/assets/img/arrow-left.png" alt="arrow-left">
+              </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -36,14 +52,52 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'Profile',
+  data: () => {
+    return {
+      image: null
+    }
+  },
   mounted () {
     this.getDataUser()
   },
   methods: {
-    ...mapActions(['getDataUser'])
+    ...mapActions(['getDataUser', 'updateProfile']),
+    hanldeUpload (e) {
+      console.log(e.target.files[0])
+      this.image = e.target.files[0]
+    },
+    handleSubmit () {
+      const data = new FormData()
+      data.append('photo', this.image)
+
+      this.updateProfile(data)
+        .then(res => {
+          Swal.fire(
+            'Edit photo success',
+            '',
+            'success'
+          )
+          this.$router.push({ name: 'Home' })
+        })
+        .catch(err => {
+          let message = ''
+          if (err === 'Only images are allowed') {
+            message = 'Only images are allowed'
+          } else {
+            message = 'File too large, max length 1MB'
+          }
+          Swal.fire(
+            `${message}`,
+            '',
+            'error'
+          )
+          console.log(err)
+        })
+    }
   },
   computed: {
     ...mapGetters(['getUser'])
@@ -60,7 +114,7 @@ export default {
   border-radius: 10px;
 }
 .profile-content {
-  margin: 55px 0;
+  margin: 45px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,6 +126,18 @@ export default {
   border-radius: 15px;
 }
 .profile-image > img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+.modal-edit > p {
+  margin: 0;
+}
+.edit-icon{
+  width: 15px;
+  height: 15px;
+}
+.edit-icon > img {
   object-fit: contain;
   width: 100%;
   height: 100%;
@@ -97,7 +163,9 @@ export default {
   color: black !important;
   margin: 0;
 }
-
+.modal-edit > p {
+  outline: none;
+}
 @media screen and (max-width: 720px) {
   .edit-button{
     width: 80%;

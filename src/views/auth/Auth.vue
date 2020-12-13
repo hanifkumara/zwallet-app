@@ -31,28 +31,42 @@ export default {
   methods: {
     ...mapActions(['login', 'signup']),
     loginHandle (dataLogin) {
-      this.login(dataLogin)
-        .then(res => {
-          Swal.fire(
-            'Login Success',
-            'You clicked the button!',
-            'success'
-          )
-          this.$router.push({ name: 'Home' })
-        })
-        .catch((err) => {
-          let { message } = err.response.data.err
-          if (message === 'Email Unlisted!!') {
-            message = 'Email Unlisted!!'
-          } else {
-            message = 'Password Wrong!!'
-          }
-          Swal.fire(
+      if (!dataLogin.email) {
+        Swal.fire(
+          'Email Required, please try again',
+          'Please try again!',
+          'error'
+        )
+      } else if (!dataLogin.password || dataLogin.password.length < 5) {
+        Swal.fire(
+          'Password required!!',
+          'Please try again!',
+          'error'
+        )
+      } else if (dataLogin.email || dataLogin.password) {
+        this.login(dataLogin)
+          .then(res => {
+            Swal.fire(
+              'Login Success',
+              'You clicked the button!',
+              'success'
+            )
+            this.$router.push({ name: 'Home' })
+          })
+          .catch((err) => {
+            let { message } = err.response.data.err
+            if (message === 'Email Unlisted!!') {
+              message = 'Email Unlisted!!'
+            } else {
+              message = 'Password Wrong!!'
+            }
+            Swal.fire(
             `${message}`,
             'Please try again!',
             'error'
-          )
-        })
+            )
+          })
+      }
     },
     hanldeSignup (payload) {
       this.signup(payload)

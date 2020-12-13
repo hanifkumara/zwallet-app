@@ -1,6 +1,9 @@
 <template>
   <div class="content">
+    <h4>List Users</h4>
+    <p>Choose one user for transfer</p>
     <div class="card-content">
+      <div class="all-card">
         <div class="card-receiver" v-for="data in listUsers" :key="data.id">
           <router-link :to="{name: 'Transaction', params: {idreceiver: data.id}}">
             <div class="d-flex">
@@ -16,6 +19,18 @@
           </router-link>
         </div>
       </div>
+      </div>
+        <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item" :class="[paginatonUsers.currentPage == 1 ? 'disabled' : '']">
+            <a class="page-link" @click.prevent="getListUsers(parseInt(paginatonUsers.currentPage) - 1)" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+          <li v-for="noPage in paginatonUsers.totalPage" class="page-item" :class="[noPage == paginatonUsers.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="getListUsers(noPage)" href="#">{{noPage}}</a></li>
+          <li class="page-item"  :class="[paginatonUsers.currentPage == paginatonUsers.totalPage ? 'disabled' : '']">
+            <a class="page-link" @click.prevent="getListUsers(parseInt(paginatonUsers.currentPage) + 1)" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
   </div>
 </template>
 
@@ -31,7 +46,7 @@ export default {
     ...mapActions(['getListUsers'])
   },
   computed: {
-    ...mapGetters(['listUsers'])
+    ...mapGetters(['listUsers', 'paginatonUsers'])
   }
 }
 </script>
@@ -71,7 +86,11 @@ export default {
 }.name-phone> h6{
   color: black !important;
 }
-.data-receiver{
-  color: black !important;
+.all-card{
+  margin-top: 18px;
+  height: 355px;
+}
+ul.pagination {
+  margin: 0;
 }
 </style>

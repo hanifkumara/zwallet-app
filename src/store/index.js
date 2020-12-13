@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import router from '../router/index'
+import Swal from 'sweetalert2'
 
 Vue.use(Vuex)
 
@@ -9,15 +10,31 @@ export default new Vuex.Store({
   state: {
     user: {},
     token: '' || localStorage.getItem('token'),
+    allUsers: [],
     dataUser: [],
     getTransactionSender: [],
     listUsers: [],
-    getUserId: []
+    getUserId: [],
+    pagination: null,
+    paginationUser: null,
+    paginationAllUsers: null
   },
   mutations: {
     SET_USER (state, payload) {
       state.user = payload
       state.token = payload.token
+    },
+    SET_PAGINATION (state, payload) {
+      state.pagination = payload
+    },
+    PAGINATION_ALL_USERS (state, payload) {
+      state.paginationAllUsers = payload
+    },
+    SET_PAGINATION_USERS (state, payload) {
+      state.paginationUser = payload
+    },
+    GET_ALL_USERS (state, payload) {
+      state.allUsers = payload
     },
     GET_DATA_USER (state, payload) {
       state.dataUser = payload
@@ -36,6 +53,21 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    getAllUsers (context, noPage = 1) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/users?page=${noPage}`)
+          .then(res => {
+            const result = res.data.result
+            console.log(result)
+            context.commit('GET_ALL_USERS', result.users)
+            context.commit('PAGINATION_ALL_USERS', result.pagination)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     getDataUser (context) {
       return new Promise((resolve, reject) => {
         axios.get(`${process.env.VUE_APP_SERVICE_API}/users/myprofile`)
@@ -49,12 +81,15 @@ export default new Vuex.Store({
           })
       })
     },
-    getListUsers (context) {
+    getListUsers (context, noPage = 1) {
       return new Promise((resolve, reject) => {
-        axios.get(`${process.env.VUE_APP_SERVICE_API}/users/listusers`)
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/users/listusers?page=${noPage}`)
           .then(res => {
             const result = res.data.result
-            context.commit('GET_LIST_USERS', result)
+            console.log(result.users)
+            console.log(result.pagination)
+            context.commit('GET_LIST_USERS', result.users)
+            context.commit('SET_PAGINATION_USERS', result.pagination)
             resolve(result)
           })
           .catch(err => {
@@ -75,16 +110,18 @@ export default new Vuex.Store({
           })
       })
     },
-    getDataTransactionSender (context) {
+    getDataTransactionSender (context, payload) {
       return new Promise((resolve, reject) => {
-        axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender`)
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${payload.pagination}&name=${payload.name}`)
           .then(res => {
-            const result = res.data.result.transaction
-            context.commit('GET_TRANSACTION_SENDER', result)
+            const result = res.data.result
+            context.commit('GET_TRANSACTION_SENDER', result.transaction)
+            context.commit('SET_PAGINATION', result.pagination)
+            console.log(result.pagination)
             resolve(result)
           })
           .catch(err => {
-            reject(err)
+            reject(err.response.data.err.message)
           })
       })
     },
@@ -95,6 +132,39 @@ export default new Vuex.Store({
             resolve(res)
           })
           .catch(err => {
+            const error = err.response.data.err.message
+            reject(error)
+          })
+      })
+    },
+    deleteUser (context, id) {
+      return new Promise((resolve, reject) => {
+        axios.delete(`${process.env.VUE_APP_SERVICE_API}/users/${id}`)
+          .then(() => {
+            Swal.fire(
+              'Delete Success!!',
+              '',
+              'success'
+            )
+            context.dispatch('getAllUsers')
+              .then(res => {
+                resolve(res)
+              })
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    updateProfileId (context, payload) {
+      return new Promise((resolve, reject) => {
+        axios.patch(`${process.env.VUE_APP_SERVICE_API}/users/updatereceiver`, payload)
+          .then(res => {
+            console.log(payload)
+            resolve(res)
+          })
+          .catch(err => {
+            console.log(err)
             reject(err)
           })
       })
@@ -107,6 +177,25 @@ export default new Vuex.Store({
           })
           .catch(err => {
             reject(err)
+          })
+      })
+    },
+    deleteTransaction (context, id) {
+      return new Promise((resolve, reject) => {
+        axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
+          .then(() => {
+            Swal.fire(
+              'Delete Sucess!',
+              '',
+              'success'
+            )
+            context.dispatch('getDataTransactionSender')
+              .then(res => {
+                resolve(res)
+              })
+          })
+          .catch(err => {
+            console.log(err)
           })
       })
     },
@@ -125,6 +214,16 @@ export default new Vuex.Store({
             reject(err)
           })
       })
+    },
+    logout (context) {
+      localStorage.clear()
+      context.commit('REMOVE_TOKEN')
+      Swal.fire(
+        'Logout Sucess!',
+        'See you again!',
+        'success'
+      )
+      router.push({ name: 'Auth' })
     },
     signup (context, payload) {
       return new Promise((resolve, reject) => {
@@ -165,6 +264,9 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    getAllUsers (state) {
+      return state.allUsers
+    },
     getUser (state) {
       return state.dataUser
     },
@@ -179,6 +281,15 @@ export default new Vuex.Store({
     },
     userId (state) {
       return state.getUserId
+    },
+    getPagination (state) {
+      return state.pagination
+    },
+    paginatonUsers (state) {
+      return state.paginationUser
+    },
+    paginationAllUsers (state) {
+      return state.paginationAllUsers
     }
   },
   modules: {

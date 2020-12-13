@@ -1,19 +1,34 @@
 <template>
-  <div class="content">
-    <h4>Change Phone Number</h4>
-    <p class="add-at">Add at least one phone number for the transfer ID so you can start transfering your money to another user.</p>
-    <div class="input-container">
-      <div class="input-phone">
-        <img src="@/assets/img/form/filled/phone.png" alt="phone-icon">
-        <input type="text" v-model="phone" :placeholder="getUser.phone">
-      <button class="btn" @click="handleUpdate" >Update Phone Number</button>
+  <div>
+    <div class="content">
+    <h4>Manage Phone Number</h4>
+    <p class="add-at">You can only delete the phone number and then you must add another phone number.</p>
+    <div class="container-card-phone">
+      <div class="card-phone d-flex justify-content-between" @click.prevent="toUpdatePhone">
+      <div class="card-left">
+        <p>Primary</p>
+        <h6>{{getData.phone}}</h6>
       </div>
     </div>
+    <div class="card-phone d-flex justify-content-between">
+      <div class="card-left">
+        <p>Secondary</p>
+        <div v-if="getData.phone2 == 'null'"><h6 @click.prevent="toAddPhone">Add Phone Number</h6></div>
+        <h6 v-else>{{getData.phone2}}</h6>
+      </div>
+      <div class="card-right">
+        <div v-if="getData.phone2 && getData.phone2 !== 'null' " @click="hanldeDelete" class="icon-delete">
+          <img src="@/assets/img/trash.png" alt="trash">
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import Swal from 'sweetalert2'
 
 export default {
@@ -24,77 +39,78 @@ export default {
       phone: ''
     }
   },
-  mounted () {
-    this.getDataUser()
-  },
   methods: {
-    ...mapActions(['updateProfile', 'getDataUser']),
-    handleUpdate () {
+    ...mapActions(['updateProfile']),
+    hanldeDelete () {
       const payload = {
-        phone: this.phone
+        phone2: 'null'
       }
+      console.log(payload)
       this.updateProfile(payload)
-        .then(() => {
+        .then(res => {
           Swal.fire(
-            'Update Phone Success',
+            'Delete Phone Success',
             '',
             'success'
           )
-          this.$router.push({ name: 'Profile' })
+          this.$router.push({ name: 'Personal' })
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    toUpdatePhone () {
+      this.$router.push({ name: 'AddPhone', params: { phone: 'update' } })
+    },
+    toAddPhone () {
+      this.$router.push({ name: 'AddPhone', params: { phone: 'add' } })
+    },
+    cek () {
+      console.log('cek boss')
     }
   },
-  computed: {
-    ...mapGetters(['getUser'])
-  }
+  props: ['get-data']
 }
 </script>
 
 <style scoped>
+.content p {
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
 .add-at{
   font-size: 13px;
   width: 50%;
   margin: 30px 0;
 }
-.input-container{
-  margin: 130px 0;
-  display:flex;
-  align-items: center;
-  flex-direction: column;
+.container-card-phone{
+  margin-bottom: 200px ;
 }
-.input-phone{
-  position: relative;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.card-phone {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background: #FFFFFF;
+  box-shadow: 0px 7px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  cursor: pointer;
 }
-.input-phone>input {
-  padding: 8px 60px;
+.icon-delete {
+  width: 20px;
+  height: 20px;
+}
+.icon-delete > img {
+  object-fit: contain;
   width: 100%;
-  border: none;
-  border-bottom: 1.5px solid #6379F4;
+  height: 100%;
 }
-.input-phone>input:focus {
-  outline: none;
+.card-left > div > h6 {
+  color: rgb(82, 82, 255);
+  cursor: pointer;
 }
-.input-phone>img{
-  position: absolute;
-  left: 5px;
-  top: 12px;
+.card-left > div > h6:hover {
+  transform: scale(1.03);
 }
-.input-phone>button{
-  margin-top: 60px;
-  color: #fff;
-  padding: 12px 0;
-  width: 100%;
-  background: #6379F4;
-  box-shadow: 0px 6px 75px rgba(100, 87, 87, 0.05);
-  border-radius: 12px;
-}
+
 @media screen and (max-width: 767px) {
   .add-at{
     width: 80%;

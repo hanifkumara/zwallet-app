@@ -16,7 +16,10 @@
               <div class="name-phone">
                 <h5 v-if="!getUser.name">Hii, {{getUser.username}}</h5>
                 <h5 v-else>{{getUser.name}}</h5>
-                <p class="text-small">{{getUser.phone}}</p>
+                <router-link :to="{name: 'Admin'}" v-if="getUser.roleId == '1'" class="admin">
+                  <p class="role-admin">Admin</p>
+                </router-link>
+                <p v-if="getUser.roleId == '2'" class="text-small">{{getUser.phone}}</p>
               </div>
             <div class="icon-bell">
               <img src="../../../src/assets/img/icon/bell.png" alt="bell">
@@ -43,24 +46,26 @@
                 <h6>Transfer</h6>
               </div>
             </router-link>
-            <div class="icon">
-              <img src="../../../src/assets/img/icon/plus.png" alt="icon-topup">
-              <h6>TopUp</h6>
-            </div>
+            <router-link :to="{name: 'Balance'}">
+              <div class="icon">
+                <img src="../../../src/assets/img/icon/plus.png" alt="icon-topup">
+                <h6>TopUp</h6>
+              </div>
+            </router-link>
             <router-link :to="{name: 'Profile'}">
               <div class="icon">
                 <img src="../../../src/assets/img/icon/user.png" alt="icon-user">
                 <h6>Profile</h6>
               </div>
             </router-link>
-            <div class="icon-logout" @click="handleLogout">
+            <div class="icon-logout" @click.prevent="logout">
               <img src="../../../src/assets/img/icon/log-out.png" alt="icon-logout">
               <h6>Logout</h6>
             </div>
           </div>
         </div>
         <div class="col-lg-9">
-          <router-view v-on:update-profile="hanldeUpdate" v-on:add-transaction="insertTransaction" :get-data="getUser" :user-id="userId"/>
+          <router-view v-on:update-profile="hanldeUpdate" v-on:delete-transaction="deleteTransaction" v-on:add-transaction="insertTransaction" v-on:search-transaction="handleSearch" :get-data="getUser" :user-id="userId" />
         </div>
       </div>
     </div>
@@ -94,7 +99,7 @@ export default {
     this.getDataUser()
   },
   methods: {
-    ...mapActions(['getDataUser', 'updateProfile', 'addTransaction']),
+    ...mapActions(['getDataUser', 'updateProfile', 'addTransaction', 'deleteTransaction', 'searchTransaction', 'logout']),
     insertTransaction (payload) {
       console.log(payload)
       this.addTransaction(payload)
@@ -114,6 +119,24 @@ export default {
           console.log(err)
         })
     },
+    handleDelete (payload) {
+      this.deleteTransaction(payload)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    handleSearch (payload) {
+      this.searchTransaction(payload)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     handleLogout () {
       this.getDataUser()
         .then(() => {
@@ -123,6 +146,7 @@ export default {
             'See you again!',
             'success'
           )
+          this.$router.go(-1)
         })
         .catch(err => {
           console.log(err)
@@ -172,6 +196,9 @@ nav {
 }
 h3 {
   color: #6379F4;
+}
+.role-admin{
+  margin: 0;
 }
 .profile-nav{
   display: flex;
@@ -244,7 +271,7 @@ p.text-small {
   display: flex;
 }
 .icon-logout{
-  margin-top: 320px;
+  margin-top: 320px
 }
 .icon h6{
   color: black !important;
@@ -293,6 +320,7 @@ footer{
     margin-top: 20px;
   }
   .dashboard {
+    position: relative;
     padding: 0 20px;
     display: flex;
     justify-content: space-between;

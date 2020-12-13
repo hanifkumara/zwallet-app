@@ -17,7 +17,7 @@
             <input type="password" v-model="dataSignup.password" placeholder="Enter your E-password" id="show">
           </div>
           <a href="#" class="forgot-password">Forgot password ?</a>
-          <Button title="Sign Up" type="submit"/>
+          <Button title="Sign Up" type="submit" :class="[dataSignup.password.length > 5 ? 'primary' : '']"/>
         </form>
         <div class="login-signup">Already have an account? Let’s <router-link to="login" style="padding-left: 5px">Login</router-link></div>
   </div>

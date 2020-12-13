@@ -3,7 +3,7 @@
     <h5 class="title">Transfer Money</h5>
     <div class="receiver">
       <div class="icon-profile">
-        <img :src="userId.photo" alt="">
+        <img :src="userId.photo" alt="photo">
       </div>
       <div class="name-phone">
         <p class="name">{{userId.name}}</p>
@@ -17,15 +17,16 @@
       <div class="add-notes">
         <input type="text" name="notes" v-model="dataTransaction.notes" placeholder="add some notes" autocomplete="off">
       </div>
-      <button id="show-modal" @click="showModal = true">Show Modal</button>
-        <Modal :user-id="userId" :data-transaction="dataTransaction" v-on:add-transaction="insertTransaction" v-if="showModal" @close="showModal = false" />
-      <!-- <button class="btn" @click.prevent="$emit('add-transaction', dataTransaction)">Continue</button> -->
+    </div>
+    <div class="button">
+      <button id="show-modal" @click="showModal = true">Confirm</button>
+          <Modal :user-id="userId" :my-profile="getUser" :data-transaction="dataTransaction" v-on:add-transaction="insertTransaction" v-if="showModal" @close="showModal = false" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Modal from '../../components/base/Modal.vue'
 import Swal from 'sweetalert2'
 
@@ -47,24 +48,42 @@ export default {
   },
   mounted () {
     this.getDataId()
+    this.getDataUser()
   },
-  props: ['user-id', 'get-data'],
+  props: ['get-data', 'user-id'],
   methods: {
-    ...mapActions(['getDataUserId', 'addTransaction']),
+    ...mapActions(['getDataUserId', 'addTransaction', 'getDataUser', 'updateProfile', 'updateProfileId']),
     getDataId () {
       this.getDataUserId(this.idReceiver)
     },
-    insertTransaction (payload) {
+    insertTransaction (payload, amount) {
       console.log(payload)
+      console.log(amount)
       this.addTransaction(payload)
         .then(res => {
+          const payloadAmount = {
+            balance: this.getUser.balance - amount
+          }
+          console.log(amount)
+          this.updateProfile(payloadAmount)
+            .then(res => {
+              const amountInt = parseInt(amount)
+              const payloadReceiver = {
+                id: this.userId.id,
+                balance: this.userId.balance + amountInt
+              }
+              this.updateProfileId(payloadReceiver)
+                .then(res => {
+                  console.log(res)
+                })
+            })
           let name = this.userId.name
           if (!name) {
             name = this.userId.username
           }
           Swal.fire(
             `Transaction to ${name}`,
-            'See you again!',
+            '',
             'success'
           )
           this.$router.push({ name: 'Home' })
@@ -73,6 +92,9 @@ export default {
           console.log(err)
         })
     }
+  },
+  computed: {
+    ...mapGetters(['getUser'])
   }
 }
 </script>
@@ -119,7 +141,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 275px;
+  height: 228px;
 }
 .input-amount>a {
   align-self: flex-end;
@@ -149,7 +171,18 @@ a>button{
   border-bottom: 1.5px solid rgba(169, 169, 169, 0.6);
   margin-top: 10px;
 }
-
+.button {
+  display: flex;
+  justify-content: flex-end;
+}
+button#show-modal {
+  background: #6379F4;
+  color: white;
+  box-shadow: 0px 6px 75px rgba(100, 87, 87, 0.05);
+  border-radius: 12px;
+  padding: 10px 60px;
+  border: none;
+}
 @media screen and (max-width: 767px) {
   .type-amount{
     width: 90%;
