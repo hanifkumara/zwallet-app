@@ -4,7 +4,8 @@
   <p align="center">
     <image align="center" width="200" src='./screenshot/logo.PNG' />
   </p>
-</p> 
+</p>
+
 ## Table of Contents
 
 * [About the Project](#about-the-project)
@@ -12,6 +13,8 @@
 * [Getting Started](#getting-started)
   * [Project setup](#project-setup)
   * [Compiles and hot-reloads for development](#compiles-and-hot-reloads-for-development)
+  * [Lints and fixes files](#lints-and-fixes-files)
+  * [Customize configuration](#customize-configuration)
 * [Screenshots](#screenshots)
 * [Contact](#contact)
 
