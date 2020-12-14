@@ -11,6 +11,16 @@ import { BootstrapVue } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
+Vue.directive('setstyle', {
+  bind: function (el, binding) {
+    if (binding.value === 'chill' || binding.arg === 'size') {
+      el.style.color = 'grey'
+      el.style.fontSize = '12px'
+    } else if (binding.value === 'dark') {
+      el.style.color = 'red'
+    }
+  }
+})
 
 new Vue({
   router,

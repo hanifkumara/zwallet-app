@@ -20,7 +20,7 @@
           </div>
         </div>
         <h4>{{getUser.name}}</h4>
-        <p>{{getUser.phone}}</p>
+        <p v-setstyle:size="'chill'">{{getUser.phone}}</p>
         <div class="edit-button">
           <router-link :to="{name: 'Personal'}">
             <div class="card-button">

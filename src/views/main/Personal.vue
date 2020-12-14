@@ -9,7 +9,6 @@
           <h6 v-b-modal.modal-1>Please input your name here...</h6>
           <b-modal id="modal-1" title="BootstrapVue" ok-only>
                 <div slot="modal-header">
-                  {{name}}
                   <input class="my-4" type="text" v-model="name" placeholder="input your name">
                 </div>
                 <button slot="modal-footer" type="submit" @click.prevent="changeName">confirm</button>
