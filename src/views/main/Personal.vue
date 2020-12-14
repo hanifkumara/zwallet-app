@@ -8,11 +8,12 @@
         <div class="change-name">
           <h6 v-b-modal.modal-1>Please input your name here...</h6>
           <b-modal id="modal-1" title="BootstrapVue" ok-only>
-                <div slot="modal-header">
-                  <input class="my-4" type="text" v-model="name" placeholder="input your name">
-                </div>
-                <button slot="modal-footer" type="submit" @click.prevent="changeName">confirm</button>
-            </b-modal>
+              <div slot="modal-header">
+                <input class="my-4" type="text" v-model="name" placeholder="input your name">
+                <p class="text-danger" v-if="name.length >=1 && name.length <= 7">name must be more than 7 char</p>
+              </div>
+              <button slot="modal-footer" type="submit" @click.prevent="changeName">confirm</button>
+          </b-modal>
         </div>
       </div>
       <h6 v-if="getUser.name">{{getUser.name}}</h6>
@@ -48,21 +49,35 @@ export default {
   methods: {
     ...mapActions(['getDataUser', 'updateProfile']),
     changeName () {
-      const payload = {
-        name: this.name
+      if (!this.name) {
+        Swal.fire(
+          'Fill required!!',
+          '',
+          'error'
+        )
+      } else if (this.name.length <= 7) {
+        Swal.fire(
+          'name must be more than 7 char',
+          '',
+          'error'
+        )
+      } else {
+        const payload = {
+          name: this.name
+        }
+        this.updateProfile(payload)
+          .then(res => {
+            Swal.fire(
+              'Edit Name Success',
+              '',
+              'success'
+            )
+            this.$router.push({ name: 'Profile' })
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
-      this.updateProfile(payload)
-        .then(res => {
-          Swal.fire(
-            'Edit Name Success',
-            '',
-            'success'
-          )
-          this.$router.push({ name: 'Profile' })
-        })
-        .catch(err => {
-          console.log(err)
-        })
     }
   },
   computed: {
@@ -88,6 +103,9 @@ export default {
   background: #FFFFFF;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
+}
+input:focus {
+  outline:none
 }
 .card-personal.phone{
   display: flex;

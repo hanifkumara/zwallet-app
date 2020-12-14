@@ -5,8 +5,8 @@
     <div class="input-container">
       <div class="input-phone">
         <img src="@/assets/img/form/filled/phone.png" alt="phone-icon">
-        <input type="text" v-model="phone" v-if="$route.params.phone === 'update'" :placeholder="getUser.phone">
-        <input type="text" v-model="phone2" v-if="$route.params.phone === 'add'" placeholder="Please input your secondary phone">
+        <input type="number" v-model="phone" v-if="$route.params.phone === 'update'" :placeholder="getUser.phone">
+        <input type="number" v-model="phone2" v-if="$route.params.phone === 'add'" placeholder="Please input your secondary phone">
       <button class="btn" @click="handleUpdate" >Add Phone Number</button>
       </div>
     </div>
@@ -22,8 +22,8 @@ export default {
   data: function () {
     return {
       dataUser: [],
-      phone: '',
-      phone2: ''
+      phone: null,
+      phone2: null
     }
   },
   mounted () {
@@ -39,9 +39,9 @@ export default {
         phone2: this.phone2
       }
       let payload = {}
-      if (this.phone.length > 0) {
+      if (this.phone) {
         payload = phone
-      } else if (this.phone2.length > 0) {
+      } else if (this.phone2) {
         payload = phone2
       }
       this.updateProfile(payload)
@@ -53,8 +53,12 @@ export default {
           )
           this.$router.push({ name: 'Profile' })
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
+          Swal.fire(
+            'Fill required',
+            '',
+            'error'
+          )
         })
     }
   },
