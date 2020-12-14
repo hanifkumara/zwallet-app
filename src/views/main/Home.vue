@@ -89,7 +89,7 @@ export default {
     transactionSender () {
       const payload = {
         pagination: 1,
-        name: this.inputSearch
+        name: ''
       }
       this.getDataTransactionSender(payload)
         .then(res => {

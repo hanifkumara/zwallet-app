@@ -86,8 +86,6 @@ export default new Vuex.Store({
         axios.get(`${process.env.VUE_APP_SERVICE_API}/users/listusers?page=${noPage}`)
           .then(res => {
             const result = res.data.result
-            console.log(result.users)
-            console.log(result.pagination)
             context.commit('GET_LIST_USERS', result.users)
             context.commit('SET_PAGINATION_USERS', result.pagination)
             resolve(result)
@@ -117,7 +115,6 @@ export default new Vuex.Store({
             const result = res.data.result
             context.commit('GET_TRANSACTION_SENDER', result.transaction)
             context.commit('SET_PAGINATION', result.pagination)
-            console.log(result.pagination)
             resolve(result)
           })
           .catch(err => {
@@ -160,11 +157,9 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.patch(`${process.env.VUE_APP_SERVICE_API}/users/updatereceiver`, payload)
           .then(res => {
-            console.log(payload)
             resolve(res)
           })
           .catch(err => {
-            console.log(err)
             reject(err)
           })
       })

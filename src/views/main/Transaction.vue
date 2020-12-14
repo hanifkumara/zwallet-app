@@ -57,8 +57,6 @@ export default {
       this.getDataUserId(this.idReceiver)
     },
     insertTransaction (payload, amount) {
-      console.log(payload)
-      console.log(amount)
       this.addTransaction(payload)
         .then(res => {
           const payloadAmount = {

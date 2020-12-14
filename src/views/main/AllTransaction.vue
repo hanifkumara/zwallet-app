@@ -31,6 +31,7 @@
           </div>
         </div>
       </div>
+      {{getPagination}}
       <nav aria-label="...">
         <ul class="pagination">
           <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
