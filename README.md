@@ -1,6 +1,5 @@
 # zwallet-vue
 <p align="center">
-<h3 align="center">Zwallet Vue & Vuex</h3>
   <p align="center">
     <image align="center" width="200" src='./screenshot/logo.PNG' />
   </p>
