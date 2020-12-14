@@ -25,7 +25,17 @@ Zwallet is an online payment application that is convenient, safe and easy. This
 Lets gets you started
 
 ## Project setup
+
+### Installation
+
+1. Clone the repo
+
+```sh
+git clone https://github.com/hanifkumara/zwallet-restfull-api.git
 ```
+2. Install NPM packages
+
+```sh
 npm install
 ```
 
