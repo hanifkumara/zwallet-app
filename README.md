@@ -1,6 +1,5 @@
 # zwallet-vue
 <p align="center">
-<h3 align="center">Zwallet RESTfull API</h3>
   <p align="center">
     <image align="center" width="200" src='./screenshot/logo.PNG' />
   </p>
@@ -26,7 +25,17 @@ Zwallet is an online payment application that is convenient, safe and easy. This
 Lets gets you started
 
 ## Project setup
+
+### Installation
+
+1. Clone the repo
+
+```sh
+git clone https://github.com/hanifkumara/zwallet-restfull-api.git
 ```
+2. Install NPM packages
+
+```sh
 npm install
 ```
 
@@ -56,4 +65,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     <image width="200" src='./screenshot/screencapture-localhost-8080-main-home-2020-12-14-13_56_34.png' />
     <image width="200" src='./screenshot/screencapture-localhost-8080-main-listusers-2020-12-14-13_57_10.png' />
     <image width="200" src='./screenshot/screencapture-localhost-8080-main-transaction-22e58cae-5279-4e00-b408-3e77fefcb867-2020-12-14-13_57_54.png' />
-    
+   
+## Contact
+My Email : hanifkumara00@gmail.com
+
+Project Link: [https://github.com/hanifkumara/zwallet-restfull-api](https://github.com/hanifkumara/zwallet-restfull-api)
+
