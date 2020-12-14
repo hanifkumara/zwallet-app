@@ -69,30 +69,38 @@ export default {
       }
     },
     hanldeSignup (payload) {
-      this.signup(payload)
-        .then(res => {
-          Swal.fire(
-            'Register Success',
-            'Please check your email for verifycation!',
-            'success'
-          )
-          this.$router.push({ name: 'Login' })
-        })
-        .catch((err) => {
-          const errMessage = err.response.data.err.message
-          let message = ''
-          console.log(errMessage)
-          if (errMessage === 'Username already exist!!') {
-            message = 'Username already exist!!'
-          } else {
-            message = 'Email already exist!!'
-          }
-          Swal.fire(
+      if (!payload.username || !payload.email || !payload.password) {
+        Swal.fire(
+          'Fill required!!',
+          'You clicked the button!',
+          'error'
+        )
+      } else {
+        this.signup(payload)
+          .then(res => {
+            Swal.fire(
+              'Register Success',
+              'Please check your email for verifycation!',
+              'success'
+            )
+            this.$router.push({ name: 'Login' })
+          })
+          .catch((err) => {
+            const errMessage = err.response.data.err.message
+            let message = ''
+            console.log(errMessage)
+            if (errMessage === 'Username already exist!!') {
+              message = 'Username already exist!!'
+            } else {
+              message = 'Email already exist!!'
+            }
+            Swal.fire(
             `${message}`,
             '',
             'error'
-          )
-        })
+            )
+          })
+      }
     }
   }
 }

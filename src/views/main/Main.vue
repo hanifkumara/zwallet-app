@@ -97,6 +97,8 @@ export default {
   name: 'Main',
   mounted () {
     this.getDataUser()
+    this.getListUsers()
+    this.getAllUsers()
   },
   methods: {
     ...mapActions(['getDataUser', 'getAllUsers', 'updateProfile', 'getListUsers', 'addTransaction', 'deleteTransaction', 'searchTransaction', 'logout']),

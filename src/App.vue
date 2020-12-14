@@ -10,13 +10,11 @@ import { mapActions } from 'vuex'
 export default {
   name: 'App',
   methods: {
-    ...mapActions(['interceptorRequest', 'interceptorResponse', 'getListUsers', 'getAllUsers'])
+    ...mapActions(['interceptorRequest', 'interceptorResponse'])
   },
   created () {
     this.interceptorRequest()
     this.interceptorResponse()
-    this.getListUsers()
-    this.getAllUsers()
   }
 }
 </script>
