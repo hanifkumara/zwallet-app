@@ -113,6 +113,7 @@ export default new Vuex.Store({
         axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${payload.pagination}&name=${payload.name}`)
           .then(res => {
             const result = res.data.result
+            console.log(result)
             context.commit('GET_TRANSACTION_SENDER', result.transaction)
             context.commit('SET_PAGINATION', result.pagination)
             resolve(result)

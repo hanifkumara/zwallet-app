@@ -18,6 +18,7 @@
             </div>
             <div class="name-phone">
               <h6>{{data.receiver}}</h6>
+              <p v-if="!data.receiver">{{data.receiverUsername}}</p>
               <p>{{data.phoneReceiver}}</p>
             </div>
           </div>
@@ -31,7 +32,6 @@
           </div>
         </div>
       </div>
-      {{getPagination}}
       <nav aria-label="...">
         <ul class="pagination">
           <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
@@ -61,7 +61,8 @@ export default {
     }
   },
   mounted () {
-    this.handleSearchSender()
+    const pagination = 1
+    this.handleSearchSender(pagination)
   },
   methods: {
     ...mapActions(['getDataTransactionSender']),

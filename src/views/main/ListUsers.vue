@@ -66,6 +66,12 @@ export default {
   justify-content: space-between;
   margin-bottom: 10px;
 }
+.card-receiver:hover {
+  transform: scale(1.02)
+}
+.card-receiver > a {
+  text-decoration: none;
+}
 .photo-receiver{
   height: 60px;
   width: 60px;

@@ -30,21 +30,27 @@ export default {
   name: 'Auth',
   methods: {
     ...mapActions(['login', 'signup']),
-    loginHandle (dataLogin) {
-      if (!dataLogin.email) {
+    loginHandle (payload) {
+      if (!payload.email || !payload.password) {
         Swal.fire(
-          'Email Required, please try again',
-          'Please try again!',
+          'Fill required!!',
+          'Please, try again!!',
           'error'
         )
-      } else if (!dataLogin.password || dataLogin.password.length < 5) {
+      } else if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
         Swal.fire(
-          'Password required!!',
-          'Please try again!',
+          'Format email invalid',
+          'Please, try again!!',
           'error'
         )
-      } else if (dataLogin.email || dataLogin.password) {
-        this.login(dataLogin)
+      } else if (payload.password.length <= 5) {
+        Swal.fire(
+          'length password must be more than 5 char',
+          'Please, try again!!',
+          'error'
+        )
+      } else {
+        this.login(payload)
           .then(res => {
             Swal.fire(
               'Login Success',
@@ -54,9 +60,12 @@ export default {
             this.$router.push({ name: 'Home' })
           })
           .catch((err) => {
+            console.log(err)
             let { message } = err.response.data.err
             if (message === 'Email Unlisted!!') {
               message = 'Email Unlisted!!'
+            } else if (message === 'Not yet verification your email!!') {
+              message = 'Not yet verification your email!!'
             } else {
               message = 'Password Wrong!!'
             }
@@ -72,7 +81,25 @@ export default {
       if (!payload.username || !payload.email || !payload.password) {
         Swal.fire(
           'Fill required!!',
-          'You clicked the button!',
+          'Please, try again!!',
+          'error'
+        )
+      } else if (payload.username.length <= 7) {
+        Swal.fire(
+          'length username must be more than 7 char',
+          'Please, try again!!',
+          'error'
+        )
+      } else if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
+        Swal.fire(
+          'Format email invalid',
+          'Please, try again!!',
+          'error'
+        )
+      } else if (payload.password.length <= 5) {
+        Swal.fire(
+          'length password must be more than 5 char',
+          'Please, try again!!',
           'error'
         )
       } else {

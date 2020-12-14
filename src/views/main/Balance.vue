@@ -26,18 +26,26 @@ export default {
   methods: {
     ...mapActions(['updateProfile']),
     handleTopUp () {
-      const payload = {
-        balance: this.getUser.balance + parseInt(this.balance)
+      if (!this.balance) {
+        Swal.fire(
+          'Fill required!!',
+          '',
+          'error'
+        )
+      } else {
+        const payload = {
+          balance: this.getUser.balance + parseInt(this.balance)
+        }
+        this.updateProfile(payload)
+          .then(() => {
+            Swal.fire(
+              'TopUp Success',
+              '',
+              'success'
+            )
+            this.$router.push({ name: 'Home' })
+          })
       }
-      this.updateProfile(payload)
-        .then(() => {
-          Swal.fire(
-            'Ehehe Boyy!!',
-            '',
-            'success'
-          )
-          this.$router.push({ name: 'Home' })
-        })
     }
   },
   computed: {

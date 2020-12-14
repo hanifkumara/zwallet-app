@@ -20,7 +20,7 @@
           <div class="modal-footer">
             <slot name="footer">
               <button v-if="pin === myProfile.pin" class="modal-default-button" @click.prevent="$emit('add-transaction', dataTransaction, dataTransaction.amountTransfer)">Confirm</button>
-              <button v-else class="modal-default-button" @click="$emit('close')">Confirm</button>
+              <button v-else class="modal-default-button" @click="$emit('add-transaction')">Confirm</button>
             </slot>
           </div>
         </div>

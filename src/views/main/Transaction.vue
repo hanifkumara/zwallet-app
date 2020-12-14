@@ -19,22 +19,27 @@
       </div>
     </div>
     <div class="button">
+      <h6 v-b-modal.modal-1 class="confirm">Confirm</h6>
+        <b-modal id="modal-1" title="BootstrapVue" ok-only>
+              <div slot="modal-header">
+                <input class="my-4" type="text" v-model="pin" placeholder="input your PIN">
+              </div>
+              <button slot="modal-footer" type="submit" @click="insertTransaction(dataTransaction, dataTransaction.amountTransfer)">confirm</button>
+          </b-modal>
+    </div>
+    <!-- <div class="button">
       <button id="show-modal" @click="showModal = true">Confirm</button>
           <Modal :user-id="userId" :my-profile="getUser" :data-transaction="dataTransaction" v-on:add-transaction="insertTransaction" v-if="showModal" @close="showModal = false" />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import Modal from '../../components/base/Modal.vue'
 import Swal from 'sweetalert2'
 
 export default {
   name: 'Transaction',
-  components: {
-    Modal
-  },
   data: function () {
     return {
       idReceiver: this.$route.params.idreceiver,
@@ -43,6 +48,7 @@ export default {
         notes: '',
         userReceiverId: this.$route.params.idreceiver
       },
+      pin: null,
       showModal: false
     }
   },
@@ -57,38 +63,52 @@ export default {
       this.getDataUserId(this.idReceiver)
     },
     insertTransaction (payload, amount) {
-      this.addTransaction(payload)
-        .then(res => {
-          const payloadAmount = {
-            balance: this.getUser.balance - amount
-          }
-          console.log(amount)
-          this.updateProfile(payloadAmount)
-            .then(res => {
-              const amountInt = parseInt(amount)
-              const payloadReceiver = {
-                id: this.userId.id,
-                balance: this.userId.balance + amountInt
-              }
-              this.updateProfileId(payloadReceiver)
-                .then(res => {
-                  console.log(res)
-                })
-            })
-          let name = this.userId.name
-          if (!name) {
-            name = this.userId.username
-          }
-          Swal.fire(
+      if (this.pin !== this.getUser.pin) {
+        Swal.fire(
+          'PIN wrong!!',
+          '',
+          'error'
+        )
+      } else if (amount > this.getUser.balance) {
+        Swal.fire(
+          'Your balance not enough',
+          `Your balance Rp. ${this.getUser.balance}`,
+          'error'
+        )
+      } else {
+        this.addTransaction(payload)
+          .then(res => {
+            const payloadAmount = {
+              balance: this.getUser.balance - amount
+            }
+            console.log(amount)
+            this.updateProfile(payloadAmount)
+              .then(res => {
+                const amountInt = parseInt(amount)
+                const payloadReceiver = {
+                  id: this.userId.id,
+                  balance: this.userId.balance + amountInt
+                }
+                this.updateProfileId(payloadReceiver)
+                  .then(res => {
+                    console.log(res)
+                  })
+              })
+            let name = this.userId.name
+            if (!name) {
+              name = this.userId.username
+            }
+            Swal.fire(
             `Transaction to ${name}`,
             '',
             'success'
-          )
-          this.$router.push({ name: 'Home' })
-        })
-        .catch(err => {
-          console.log(err)
-        })
+            )
+            this.$router.push({ name: 'Home' })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
   },
   computed: {
@@ -150,6 +170,9 @@ a>button{
   background: #6379F4;
   color: white;
 }
+button:focus{
+  outline: none;
+}
 .input-amount input:focus{
   outline: none;
 }
@@ -173,13 +196,19 @@ a>button{
   display: flex;
   justify-content: flex-end;
 }
-button#show-modal {
+input:focus {
+  outline: none
+}
+.button > .confirm {
   background: #6379F4;
   color: white;
   box-shadow: 0px 6px 75px rgba(100, 87, 87, 0.05);
   border-radius: 12px;
   padding: 10px 60px;
   border: none;
+}
+.button > .confirm {
+  outline: none
 }
 @media screen and (max-width: 767px) {
   .type-amount{

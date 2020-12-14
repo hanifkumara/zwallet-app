@@ -57,6 +57,7 @@
             </div>
             <div class="profile">
               <h6>{{data.receiver}}</h6>
+              <p v-if="!data.receiver">{{data.receiverUsername}}</p>
               <p>Transfer</p>
             </div>
           </div>
@@ -144,6 +145,9 @@ export default {
   border: 1px solid #FFFFFF;
   box-sizing: border-box;
   border-radius: 10px;
+}
+.balance-left a {
+  text-decoration: none;
 }
 .balance-topup{
   width:100%
