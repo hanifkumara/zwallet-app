@@ -51,7 +51,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ##  Screenshots
 <p align='center'>
   <span>
-    <image width="200" src='./screenshot/<image width="200" src='./screenshots/delete-user.PNG' />' />
+    <image width="200" src='./screenshot/screencapture-localhost-8080-login-2020-12-14-14_29_20.png' />
     <image width="200" src='./screenshot/screencapture-localhost-8080-signup-2020-12-14-14_32_04.png' />
     <image width="200" src='./screenshot/screencapture-localhost-8080-main-home-2020-12-14-13_56_34.png' />
     <image width="200" src='./screenshot/screencapture-localhost-8080-main-listusers-2020-12-14-13_57_10.png' />
