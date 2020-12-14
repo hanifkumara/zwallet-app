@@ -2,7 +2,7 @@
 <p align="center">
 <h3 align="center">Zwallet RESTfull API</h3>
   <p align="center">
-    <image align="center" width="200" src='./screenshots/logo.PNG' />
+    <image align="center" width="200" src='./screenshot/logo.PNG' />
   </p>
 </p> 
 ## Table of Contents
@@ -10,8 +10,8 @@
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
+  * [Project setup](#project-setup)
+  * [Compiles and hot-reloads for development](#compiles-and-hot-reloads-for-development)
 * [Screenshots](#screenshots)
 * [Contact](#contact)
 
@@ -21,6 +21,7 @@ Zwallet is an online payment application that is convenient, safe and easy. This
 
 ## Getting Started
 Lets gets you started
+
 ## Project setup
 ```
 npm install
