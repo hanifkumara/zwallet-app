@@ -9,7 +9,13 @@
         <p>{{getUser.phone}}</p>
       </div>
       <div class="balance-right">
-        <router-link :to="{name: 'ListUsers'}" class="balance-transfer">
+        <router-link v-if="getUser.balance == 0" :to="{name: 'Balance'}" class="balance-transfer">
+          <div class="icon-balance">
+            <img src="@/assets/img/arrow-up.png" alt="icon">
+          </div>
+          <p>Transfer</p>
+        </router-link>
+        <router-link v-if="getUser.balance > 0" :to="{name: 'ListUsers'}" class="balance-transfer">
           <div class="icon-balance">
             <img src="@/assets/img/arrow-up.png" alt="icon">
           </div>
@@ -90,7 +96,8 @@ export default {
     transactionSender () {
       const payload = {
         pagination: 1,
-        name: ''
+        name: '',
+        sort: 'DESC'
       }
       this.getDataTransactionSender(payload)
         .then(res => {

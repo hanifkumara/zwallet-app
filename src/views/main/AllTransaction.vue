@@ -9,6 +9,10 @@
       </div>
       <input type="text" placeholder="Search receiver here" v-model="inputSearch">
     </div>
+    <div class="sort">
+      <div class="badge badge-warning mr-1" @click="handleSearchSender(null, 'ASC')">Longest</div>
+      <div class="badge badge-primary" @click="handleSearchSender(null, 'DESC')">Latest</div>
+    </div>
     <div class="card-container">
       <div class="card-content">
         <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id">
@@ -35,11 +39,11 @@
       <nav aria-label="...">
         <ul class="pagination">
           <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
-            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) - 1)" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) - 1), null" href="#" tabindex="-1" aria-disabled="true">Previous</a>
           </li>
-          <li v-for="noPage in getPagination.totalPage" class="page-item" :class="[noPage == getPagination.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="handleSearchSender(noPage)" href="#">{{noPage}}</a></li>
+          <li v-for="noPage in getPagination.totalPage" class="page-item" :class="[noPage == getPagination.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="handleSearchSender(noPage, null)" href="#">{{noPage}}</a></li>
           <li class="page-item"  :class="[getPagination.currentPage == getPagination.totalPage ? 'disabled' : '']">
-            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) + 1)" href="#">Next</a>
+            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) + 1), null" href="#">Next</a>
           </li>
         </ul>
       </nav>
@@ -61,15 +65,16 @@ export default {
     }
   },
   mounted () {
-    const pagination = 1
-    this.handleSearchSender(pagination)
+    this.handleSearchSender()
   },
   methods: {
     ...mapActions(['getDataTransactionSender']),
-    handleSearchSender (pagination) {
+    handleSearchSender (pagination, handleSort) {
+      console.log(this.sort)
       const payload = {
-        pagination: pagination,
-        name: this.inputSearch
+        pagination: pagination || 1,
+        name: this.inputSearch,
+        sort: handleSort || 'DESC'
       }
       this.getDataTransactionSender(payload)
     }
@@ -82,46 +87,6 @@ export default {
   computed: {
     ...mapGetters(['getPagination', 'getTransactionSender'])
   }
-  // methods: {
-  //   async getDataTransaction () {
-  //     try {
-  //       const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${this.currentPages}`)
-  //       const resData = result.data.result.transaction
-  //       const rows = result.data.result.pagination.totalData
-  //       this.dataReceiver = resData
-  //       this.rows = rows
-  //     } catch (error) {
-  //       console.log(error.message)
-  //     }
-  //   },
-  //   async deleteTransaction (id) {
-  //     try {
-  //       await axios.delete(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
-  //       Swal.fire(
-  //         'Delete Sucess!',
-  //         'You clicked the button!',
-  //         'success'
-  //       )
-  //       const result = await axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender`)
-  //       const resData = result.data.result.transaction
-  //       this.dataReceiver = resData
-  //       console.log(this.dataReceiver)
-  //     } catch (error) {
-  //       console.log(error.message)
-  //     }
-  //   },
-  //   longest () {
-  //     this.dataReceiver.sort((a, b) => a.id > b.id ? 1 : -1)
-  //   },
-  //   latest () {
-  //     this.dataReceiver.sort((a, b) => a.id < b.id ? 1 : -1)
-  //   }
-  // },
-  // watch: {
-  //   currentPages: function (val) {
-  //     this.getDataTransaction()
-  //   }
-  // }
 }
 </script>
 
@@ -129,8 +94,21 @@ export default {
 a:hover{
   text-decoration: none;
 }
+.sort{
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+.badge {
+  cursor: pointer;
+}
+.badge:hover{
+  transform: scale(1.05);
+}
 .input-search {
-  margin: 30px 0;
+  margin-top: 30px;
+  margin-bottom: 10px;
   width: 100%;
   display: flex;
   position: relative;
