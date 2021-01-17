@@ -15,9 +15,9 @@ export default new Vuex.Store({
     getTransactionSender: [],
     listUsers: [],
     getUserId: [],
-    pagination: null,
-    paginationUser: null,
-    paginationAllUsers: null
+    pagination: {},
+    paginationUser: {},
+    paginationAllUsers: {}
   },
   mutations: {
     SET_USER (state, payload) {
@@ -281,6 +281,7 @@ export default new Vuex.Store({
       return state.getUserId
     },
     getPagination (state) {
+      console.log(state.pagination)
       return state.pagination
     },
     paginatonUsers (state) {

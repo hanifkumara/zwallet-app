@@ -31,13 +31,14 @@
               <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
             </div>
             <div class="data-receiver">
-              {{data.createdAt}}
+              {{ data.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
             </div>
           </div>
         </div>
       </div>
       <nav aria-label="...">
-        <ul class="pagination">
+        <div v-if="getPagination.totalPage < 2"></div>
+        <ul class="pagination" v-else>
           <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
             <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) - 1), null" href="#" tabindex="-1" aria-disabled="true">Previous</a>
           </li>
@@ -80,7 +81,7 @@ export default {
     }
   },
   watch: {
-    inputSearch: function (val) {
+    inputSearch: function () {
       this.handleSearchSender()
     }
   },

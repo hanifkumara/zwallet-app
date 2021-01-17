@@ -10,6 +10,8 @@ import { BootstrapVue } from 'bootstrap-vue'
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 
+Vue.use(require('vue-moment'))
+
 Vue.config.productionTip = false
 Vue.directive('setstyle', {
   bind: function (el, binding) {
