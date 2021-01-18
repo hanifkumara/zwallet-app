@@ -19,6 +19,7 @@ import ListUsers from '../views/main/ListUsers.vue'
 import AddPHone from '../views/main/AddPhone.vue'
 import Admin from '../views/main/Admin.vue'
 import Pin from '../views/main/Pin.vue'
+import DetailTransaction from '../views/main/DetailTransaction.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -120,6 +121,11 @@ const routes = [
         path: 'pin',
         name: 'Pin',
         component: Pin
+      },
+      {
+        path: '/detail-transaction',
+        name: 'DetailTransaction',
+        component: DetailTransaction
       },
       {
         path: 'addphone/:phone',

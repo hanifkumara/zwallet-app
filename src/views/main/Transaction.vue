@@ -6,7 +6,8 @@
         <img :src="userId.photo" alt="photo">
       </div>
       <div class="name-phone">
-        <p class="name">{{userId.name}}</p>
+        <p class="name" v-if="userId.name">{{userId.name}}</p>
+        <p class="name" v-else>{{userId.username}}</p>
         <p class="phone">{{userId.phone}}</p>
       </div>
     </div>
@@ -19,7 +20,7 @@
       </div>
     </div>
     <div class="button">
-      <h6 v-b-modal.modal-1 class="confirm">Confirm</h6>
+      <h6 v-b-modal.modal-1 class="confirm" @click="toDetailTransaction(dataTransaction, dataTransaction.amountTransfer)">Confirm</h6>
         <b-modal id="modal-1" title="BootstrapVue" ok-only>
               <div slot="modal-header">
                 <input class="my-4" type="text" v-model="pin" placeholder="input your PIN">
@@ -109,6 +110,9 @@ export default {
             console.log(err)
           })
       }
+    },
+    toDetailTransaction (payload, amount) {
+      this.$router.push({ name: 'DetailTransaction', query: { userId: this.userId.id, userBalance: this.userId.balance, name: this.userId.name, userName: this.userId.username, notes: payload.notes, amount } })
     }
   },
   computed: {
