@@ -15,7 +15,7 @@
             <div class="col-md-5">
                 <div class="wrapper-right">
                     <div class="line"></div>
-                    <router-view v-on:login-handle="loginHandle" v-on:signup-handle="hanldeSignup" />
+                    <router-view v-on:login-handle="loginHandle" v-on:signup-handle="hanldeSignup" v-on:forgot-handle="forgothandle"/>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@ import Swal from 'sweetalert2'
 export default {
   name: 'Auth',
   methods: {
-    ...mapActions(['login', 'signup']),
+    ...mapActions(['login', 'signup', 'forgotPassword']),
     loginHandle (payload) {
       if (!payload.email || !payload.password) {
         Swal.fire(
@@ -126,6 +126,19 @@ export default {
             '',
             'error'
             )
+          })
+      }
+    },
+    forgothandle (payload) {
+      if (!payload) {
+        Swal.fire('Fill required!!', 'please check again', 'error')
+      } else {
+        this.forgotPassword({ email: payload })
+          .then((result) => {
+            Swal.fire(result.data.result.message, 'please check your email for create new password', 'success')
+          })
+          .catch((err) => {
+            Swal.fire(err.response.data.err.message, '', 'error')
           })
       }
     }

@@ -108,6 +108,9 @@ export default {
   background: #6379F4;
   color: white;
 }
+.container-pin>button:focus{
+  outline: none;
+}
 @media screen and (max-width: 980px) {
   .container-pin{
     width: 80%;

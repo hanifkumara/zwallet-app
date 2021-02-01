@@ -18,7 +18,7 @@
         <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id">
           <div class="d-flex">
             <div class="photo-receiver">
-              <img :src="data.receiverPhoto" alt="photo-receiver">
+              <img :src="data.receiverPhoto" alt="photo-receiver" @error="imgPlaceholder">
             </div>
             <div class="name-phone">
               <h6>{{data.receiver}}</h6>
@@ -78,6 +78,9 @@ export default {
         sort: handleSort || 'DESC'
       }
       this.getDataTransactionSender(payload)
+    },
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
     }
   },
   watch: {

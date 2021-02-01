@@ -10,7 +10,7 @@
             <div class="profile-nav">
               <router-link :to="{name: 'Profile'}">
                 <div class="icon-profile">
-                <img :src='getUser.photo' alt="photo">
+                <img :src='getUser.photo' alt="photo" @error="imgPlaceholder">
               </div>
               </router-link>
               <div class="name-phone">
@@ -167,6 +167,9 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
     }
   },
   computed: {

@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Learn from '../views/Learn.vue'
+import Confirmation from '../views/auth/Confirmation.vue'
 import Auth from '../views/auth/Auth.vue'
 import Login from '../views/auth/Login.vue'
 import SignUp from '../views/auth/SignUp.vue'
+import ForgotPassword from '../views/auth/ForgotPassword.vue'
+import CreatePassword from '../views/auth/CreatePassword.vue'
 import Addpin from '../views/auth/Addpin.vue'
 import Main from '../views/main/Main.vue'
 import Transaction from '../views/main/Transaction.vue'
@@ -36,6 +39,11 @@ const routes = [
     component: Learn
   },
   {
+    path: '/confirmation/:token',
+    name: 'Confirmation',
+    component: Confirmation
+  },
+  {
     path: '/auth',
     name: 'Auth',
     redirect: '/auth/login',
@@ -57,6 +65,16 @@ const routes = [
         path: 'addpin',
         name: 'Addpin',
         component: Addpin
+      },
+      {
+        path: 'forgot-password',
+        name: 'ForgotPassword',
+        component: ForgotPassword
+      },
+      {
+        path: 'create-password/:token',
+        name: 'CreatePassword',
+        component: CreatePassword
       }
     ]
   },

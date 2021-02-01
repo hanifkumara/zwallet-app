@@ -2,23 +2,11 @@
   <div class="content">
     <div class="profile-container">
       <div class="profile-content">
-        <div class="profile-image">
-          <img :src="getUser.photo" alt="photo">
-        </div>
-        <div class="edit d-flex">
-          <div class="edit-icon mr-1">
-            <img src="@/assets/img/edit-2.png" alt="edit">
-          </div>
-          <div class="modal-edit">
-            <p v-b-modal.modal-1>edit</p>
-            <b-modal id="modal-1" title="BootstrapVue" ok-only>
-                <div slot="modal-header">
-                  <input class="my-4" @change="hanldeUpload" type="file" id="photo">
-                </div>
-                <button slot="modal-footer" type="submit" @click.prevent="handleSubmit">confirm</button>
-            </b-modal>
-          </div>
-        </div>
+        <label for="file-upload" class="img-wrap">
+            <img :src="getUser.photo" alt="photo" @error="imgPlaceholder">
+        <h4 class="description-image">Upload Photo</h4>
+        </label>
+        <input type="file" id="file-upload" @change="hanldeUpload">
         <h4>{{getUser.name}}</h4>
         <p v-setstyle:size="'chill'">{{getUser.phone}}</p>
         <div class="edit-button">
@@ -67,13 +55,9 @@ export default {
   methods: {
     ...mapActions(['getDataUser', 'updateProfile']),
     hanldeUpload (e) {
-      console.log(e.target.files[0])
-      this.image = e.target.files[0]
-    },
-    handleSubmit () {
+      const image = e.target.files[0]
       const data = new FormData()
-      data.append('photo', this.image)
-
+      data.append('photo', image)
       this.updateProfile(data)
         .then(res => {
           Swal.fire(
@@ -92,11 +76,14 @@ export default {
           }
           Swal.fire(
             `${message}`,
-            '',
+            'Please input image correctly',
             'error'
           )
           console.log(err)
         })
+    },
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
     }
   },
   computed: {
@@ -114,19 +101,26 @@ export default {
   border-radius: 10px;
 }
 .profile-content {
-  margin: 45px 0;
+  margin: 38px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-.profile-image{
-  width: 70px;
-  height: 70px;
+.img-wrap{
+  position: relative;
+  width: 120px;
+  height: 120px;
   border-radius: 15px;
+  cursor: pointer;
 }
-.profile-image > img {
+.img-wrap:hover .description-image {
+  visibility: visible;
+  opacity: 1;
+}
+.img-wrap > img {
   object-fit: contain;
+  border-radius: 15px;
   width: 100%;
   height: 100%;
 }
@@ -165,6 +159,26 @@ export default {
 }
 .modal-edit > p {
   outline: none;
+}
+input[type="file"]{
+  display: none;
+}
+.description-image {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(158, 158, 158, 0.72);
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+
+  /* transition effect. not necessary */
+  transition: opacity .2s, visibility .2s;
 }
 @media screen and (max-width: 720px) {
   .edit-button{

@@ -51,7 +51,8 @@ export default {
       amount: this.$route.query.amount,
       name: this.$route.query.name,
       userName: this.$route.query.userName,
-      pin: null
+      pin: null,
+      amountReceiver: this.$route.query.userBalance
     }
   },
   methods: {
@@ -78,9 +79,10 @@ export default {
             this.updateProfile(payloadAmount)
               .then(res => {
                 const amountInt = parseInt(this.amount)
+                console.log(amountInt)
                 const payloadReceiver = {
                   id: this.userReceiverId,
-                  balance: this.route.query.userBalance + amountInt
+                  balance: parseInt(this.amountReceiver) + amountInt
                 }
                 this.updateProfileId(payloadReceiver)
                   .then(res => {

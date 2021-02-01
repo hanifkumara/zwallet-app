@@ -58,8 +58,10 @@
         <div v-else>
         <div class="contact-card"  v-for="data in getTransactionSender" :key="data.id">
           <div class="card-left">
-            <div class="photo">
-              <img :src="data.receiverPhoto" alt="photo-profile">
+            <div class="wrapper-photo">
+              <div class="photo">
+                <img :src="data.receiverPhoto" alt="photo-profile" @error="imgPlaceholder">
+              </div>
             </div>
             <div class="profile">
               <h6>{{data.receiver}}</h6>
@@ -107,6 +109,9 @@ export default {
           this.error = err
           console.log(err)
         })
+    },
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
     }
   },
   computed: {
@@ -208,6 +213,9 @@ export default {
 }
 .contact-card p {
   margin: 0;
+}
+.wrapper-photo{
+  width: fit-content;
 }
 .photo{
   margin-right: 10px;

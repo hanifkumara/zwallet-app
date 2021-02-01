@@ -3,7 +3,7 @@
     <h5 class="title">Transfer Money</h5>
     <div class="receiver">
       <div class="icon-profile">
-        <img :src="userId.photo" alt="photo">
+        <img :src="userId.photo" alt="photo" @error="imgPlaceholder">
       </div>
       <div class="name-phone">
         <p class="name" v-if="userId.name">{{userId.name}}</p>
@@ -64,6 +64,7 @@ export default {
       this.getDataUserId(this.idReceiver)
     },
     insertTransaction (payload, amount) {
+      console.log(amount)
       if (this.pin !== this.getUser.pin) {
         Swal.fire(
           'PIN wrong!!',
@@ -85,20 +86,17 @@ export default {
             console.log(amount)
             this.updateProfile(payloadAmount)
               .then(res => {
-                const amountInt = parseInt(amount)
+                // const amountInt = parseInt(amount)
                 const payloadReceiver = {
                   id: this.userId.id,
-                  balance: this.userId.balance + amountInt
+                  balance: this.userId.balance + amount
                 }
                 this.updateProfileId(payloadReceiver)
                   .then(res => {
                     console.log(res)
                   })
               })
-            let name = this.userId.name
-            if (!name) {
-              name = this.userId.username
-            }
+            const name = this.userId.name
             Swal.fire(
             `Transaction to ${name}`,
             '',
@@ -113,6 +111,9 @@ export default {
     },
     toDetailTransaction (payload, amount) {
       this.$router.push({ name: 'DetailTransaction', query: { userId: this.userId.id, userBalance: this.userId.balance, name: this.userId.name, userName: this.userId.username, notes: payload.notes, amount } })
+    },
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
     }
   },
   computed: {

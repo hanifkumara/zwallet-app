@@ -8,7 +8,7 @@
           <router-link :to="{name: 'Transaction', params: {idreceiver: data.id}}">
             <div class="d-flex">
               <div class="photo-receiver">
-                <img :src="data.photo" alt="photo-receiver">
+                <img :src="data.photo" alt="photo-receiver" @error="imgPlaceholder">
               </div>
               <div class="name-phone">
                 <h6 v-if="!data.name">{{data.username}}</h6>
@@ -43,7 +43,10 @@ export default {
     this.getListUsers()
   },
   methods: {
-    ...mapActions(['getListUsers'])
+    ...mapActions(['getListUsers']),
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
+    }
   },
   computed: {
     ...mapGetters(['listUsers', 'paginatonUsers'])

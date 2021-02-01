@@ -234,6 +234,17 @@ export default new Vuex.Store({
           })
       })
     },
+    forgotPassword (context, payload) {
+      return new Promise((resolve, reject) => {
+        axios.post(`${process.env.VUE_APP_SERVICE_API}/auth/forgot-password`, payload)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     interceptorRequest (context) {
       axios.interceptors.request.use(function (config) {
         config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`

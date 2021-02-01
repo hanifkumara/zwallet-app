@@ -4,19 +4,16 @@
     <p class="we-got">We got your personal information from the sign up proccess. If you want to make changes on your information, contact our support.</p>
     <div class="card-personal">
       <p>Name</p>
-      <div v-if="!getUser.name">
-        <div class="change-name">
-          <h6 v-b-modal.modal-1>Please input your name here...</h6>
-          <b-modal id="modal-1" title="BootstrapVue" ok-only>
-              <div slot="modal-header">
-                <input class="my-4" type="text" v-model="name" placeholder="input your name">
-                <p class="text-danger" v-if="name.length >=1 && name.length <= 7">name must be more than 7 char</p>
-              </div>
-              <button slot="modal-footer" type="submit" @click.prevent="changeName">confirm</button>
-          </b-modal>
-        </div>
+      <div class="change-name">
+        <h6 v-b-modal.modal-1>{{getUser.name}}</h6>
+        <b-modal id="modal-1" title="BootstrapVue" ok-only>
+            <div slot="modal-header">
+              <input class="my-4" type="text" v-model="name" placeholder="input your name">
+              <p class="text-danger" v-if="name.length >=1 && name.length <= 7">name must be more than 7 char</p>
+            </div>
+            <button slot="modal-footer" type="submit" @click.prevent="changeName">confirm</button>
+        </b-modal>
       </div>
-      <h6 v-if="getUser.name">{{getUser.name}}</h6>
     </div>
     <div class="card-personal">
       <p>Verifed E-Mail</p>
