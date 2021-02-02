@@ -61,7 +61,7 @@ This is an example of how to list things you need to use the software and how to
 ```sh
 git clone https://github.com/hanifkumara/telegram-app.git
 ```
-2. Install NPM packages
+2. Install Yarn packages
 
 ```sh
 yarn install
