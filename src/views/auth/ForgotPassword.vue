@@ -8,7 +8,7 @@
             <input type="text" v-model="email" placeholder="Enter your E-mail">
           </div>
           <p class="text-danger" v-if="email.length >=1 && !email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)">Format email invalid</p>
-          <Button title="Forgot Password" type="submit" :class="[email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) ? 'primary' : '']"/>
+          <Button title="Forgot Password" :loading="loading" type="submit" :class="[email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) ? 'primary' : '']"/>
         </form>
         <div class="login-signup">Already have an account? Let’s <router-link to="login" style="padding-left: 5px">Login</router-link></div>
   </div>
@@ -26,7 +26,8 @@ export default {
     return {
       email: ''
     }
-  }
+  },
+  props: ['loading']
 }
 </script>
 

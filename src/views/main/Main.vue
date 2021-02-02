@@ -145,6 +145,11 @@ export default {
       this.deleteTransaction(payload)
         .then(res => {
           console.log(res)
+          const payload = {
+            page: 1,
+            name: ''
+          }
+          this.getDataIncomes(payload)
           this.transactionSender()
         })
         .catch(err => {

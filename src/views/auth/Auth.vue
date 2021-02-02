@@ -154,11 +154,15 @@ export default {
       if (!payload) {
         Swal.fire('Fill required!!', 'please check again', 'error')
       } else {
+        this.loading = true
         this.forgotPassword({ email: payload })
           .then((result) => {
-            Swal.fire(result.data.result.message, 'please check your email for create new password', 'success')
+            this.loading = false
+            console.log(result.data.result.message)
+            Swal.fire('Please check your email for create new password', "If you haven't received email, please try again", 'success')
           })
           .catch((err) => {
+            this.loading = false
             Swal.fire(err.response.data.err.message, '', 'error')
           })
       }

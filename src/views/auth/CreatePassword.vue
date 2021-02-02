@@ -13,7 +13,12 @@
       <img src="@/assets/img/ic_sharp-remove-red-eye.png" alt="icon-eye" @click="showPassword2">
     </div>
     <p class="text-danger" v-if="confirmPassword.length > 1 & confirmPassword.length <= 7">Pasword must be more than 7 characters</p>
-    <div class="btn btn-primary mt-2" @click="handleConfirm">confirm</div>
+    <button class="btn btn-primary mt-2 d-flex align-items-center" @click="handleConfirm" :disabled="loading">
+      confirm
+      <template v-if="loading">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: none; display: block; shape-rendering: auto;" width="40px" height="40px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><path fill="none" stroke="#1d3f72" stroke-width="5" stroke-dasharray="42.76482137044271 42.76482137044271" d="M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z" stroke-linecap="round" style="transform:scale(0.67);transform-origin:50px 50px"><animate attributeName="stroke-dashoffset" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0;256.58892822265625"></animate></path></svg>
+      </template>
+    </button>
   </div>
 </template>
 
@@ -29,7 +34,8 @@ export default {
     return {
       newPassword: '',
       confirmPassword: '',
-      errorNotSame: false
+      errorNotSame: false,
+      loading: false
     }
   },
   methods: {
@@ -49,6 +55,7 @@ export default {
       if (this.confirmPassword.length <= 7) {
         Swal.fire('Pasword must be more than 7 characters', 'please check again', 'error')
       } else {
+        this.loading = true
         try {
           const token = this.$route.params.token
           const apiUrl = `${process.env.VUE_APP_SERVICE_API}`
@@ -60,9 +67,11 @@ export default {
           })
           const result = await authAxios.patch('/auth/reset-password', { password: this.newPassword })
           console.log(result)
+          this.loading = false
           Swal.fire('Success', 'Lets go login now', 'success')
           this.$router.push('/auth/login')
         } catch (error) {
+          this.loading = false
           console.log(error.response)
         }
       }

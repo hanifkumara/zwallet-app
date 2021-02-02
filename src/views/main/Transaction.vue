@@ -21,22 +21,13 @@
     </div>
     <div class="button">
       <h6 v-b-modal.modal-1 class="confirm" @click="toDetailTransaction(dataTransaction, dataTransaction.amountTransfer)">Confirm</h6>
-        <b-modal id="modal-1" title="BootstrapVue" ok-only>
-              <div slot="modal-header">
-                <input class="my-4" type="text" v-model="pin" placeholder="input your PIN">
-              </div>
-              <button slot="modal-footer" type="submit" @click="insertTransaction(dataTransaction, dataTransaction.amountTransfer)">confirm</button>
-          </b-modal>
     </div>
-    <!-- <div class="button">
-      <button id="show-modal" @click="showModal = true">Confirm</button>
-          <Modal :user-id="userId" :my-profile="getUser" :data-transaction="dataTransaction" v-on:add-transaction="insertTransaction" v-if="showModal" @close="showModal = false" />
-    </div> -->
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'Transaction',
@@ -63,7 +54,11 @@ export default {
       this.getDataUserId(this.idReceiver)
     },
     toDetailTransaction (payload, amount) {
-      this.$router.push({ name: 'DetailTransaction', query: { userId: this.userId.id, userBalance: this.userId.balance, name: this.userId.name, userName: this.userId.username, notes: payload.notes, amount } })
+      if (amount < 1000) {
+        Swal.fire('Min transfer is Rp. 1000', 'please try again', 'error')
+      } else {
+        this.$router.push({ name: 'DetailTransaction', query: { userId: this.userId.id, userBalance: this.userId.balance, name: this.userId.name, userName: this.userId.username, notes: payload.notes, amount } })
+      }
     },
     imgPlaceholder (e) {
       e.target.src = 'https://via.placeholder.com/300'

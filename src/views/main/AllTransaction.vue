@@ -23,7 +23,7 @@
         </div>
         <div class="card-container">
           <div class="card-content">
-            <div class="card-receiver" v-for="(data, index) in getTransactionSender" :key="data.id">
+            <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id">
               <div class="d-flex">
                 <div class="photo-receiver">
                   <img :src="data.receiverPhoto" alt="photo-receiver" @error="imgPlaceholder">
@@ -36,11 +36,15 @@
               </div>
               <div class="right-card">
                 <div class="delete">
-                  <!-- <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button> -->
-                  <button class="badge badge-danger" ref="destroyCard" @click="coba(index)">Hapus</button>
+                  <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
+                  <!-- <button class="badge badge-danger" ref="destroyCard" @click="coba(index)">Hapus</button> -->
                 </div>
-                <div class="data-receiver">
-                  {{ data.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
+                <div class="data-receiver d-flex">
+                  <p class="text-danger amount mr-2">
+                    -Rp. {{ data.amountTransfer | numFormat }}
+                  </p>
+                  |
+                  {{ data.createdAt | moment("dddd, MMMM Do YYYY") }}
                 </div>
               </div>
             </div>
@@ -92,10 +96,14 @@
               </div>
               <div class="right-card">
                 <div class="delete">
-                  <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
+                  <button class="badge badge-danger" @click="handleDelete(data.id)">Hapus</button>
                 </div>
-                <div class="data-receiver">
-                  {{ data.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
+                <div class="data-receiver d-flex">
+                  <p class="text-success amount mr-2">
+                    +Rp. {{ data.amountTransfer | numFormat }}
+                  </p>
+                  |
+                  {{ data.createdAt | moment("dddd, MMMM Do YYYY") }}
                 </div>
               </div>
             </div>
@@ -144,11 +152,11 @@ export default {
       name: ''
     }
     this.getDataIncomes(payload)
-    this.handleSearchReceiver()
-    this.handleSearchSender()
+    // this.handleSearchReceiver()
+    // this.handleSearchSender()
   },
   methods: {
-    ...mapActions(['getDataTransactionSender', 'getDataIncomes']),
+    ...mapActions(['getDataTransactionSender', 'getDataIncomes', 'deleteTransaction']),
     coba (index) {
       console.log(index)
       const result = this.$refs.destroyCard[index]
@@ -157,11 +165,17 @@ export default {
       console.log(result2)
     },
     handleContentTransfer () {
+      this.getDataTransactionSender()
       this.text = 'My Transfer'
       this.contentTransfer = !this.contentTransfer
       this.contentIncome = !this.contentIncome
     },
     handleContentIncome () {
+      const payload = {
+        page: 1,
+        name: ''
+      }
+      this.getDataIncomes(payload)
       this.text = 'My Income'
       this.contentTransfer = !this.contentTransfer
       this.contentIncome = !this.contentIncome
@@ -174,6 +188,28 @@ export default {
         sort: handleSort || 'DESC'
       }
       this.getDataTransactionSender(payload)
+    },
+    handleDelete (payload) {
+      console.log('hallo', payload)
+      this.deleteTransaction(payload)
+        .then(res => {
+          console.log(res)
+          const payload = {
+            page: 1,
+            name: ''
+          }
+          this.getDataIncomes(payload)
+            .then((result) => {
+              console.log('ini result dataincome', result)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+          this.transactionSender()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     handleSearchSender (pagination) {
       console.log(this.sort)
@@ -243,9 +279,6 @@ a:hover{
   object-fit: contain;
   width: 100%;
   height: 100%;
-}
-.card-content{
-  height: 390px;
 }
 .card-receiver{
   width: 100%;

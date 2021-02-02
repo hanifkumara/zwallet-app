@@ -115,7 +115,8 @@ export default new Vuex.Store({
           })
       })
     },
-    getDataTransactionSender (context, payload) {
+    getDataTransactionSender (context, payload = { pagination: 1, name: '', sort: 'DESC' }) {
+      console.log(payload)
       return new Promise((resolve, reject) => {
         axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${payload.pagination}&name=${payload.name}&sort=${payload.sort}`)
           .then(res => {
@@ -131,6 +132,7 @@ export default new Vuex.Store({
     },
     getDataIncomes (context, payload) {
       return new Promise((resolve, reject) => {
+        console.log(payload)
         axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/income?name=${payload.name}&page=${payload.page}`)
           .then(res => {
             const result = res.data.result

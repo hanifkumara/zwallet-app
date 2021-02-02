@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h4>Your balance now : Rp. {{getUser.balance}}</h4>
+    <h4>Your balance now : Rp. {{ getUser.balance | numFormat }}</h4>
     <p class="add-at">Fill your balance to make transaction easier</p>
     <div class="input-container">
       <div class="input-phone">
