@@ -1,53 +1,122 @@
 <template>
   <div class="content">
-    <div class="d-flex justify-content-between">
-      <h5>Search Receiver</h5>
+    <div class="menu-dropdown">
+      <b-dropdown id="dropdown-1" :text="text" class="m-md-2">
+        <b-dropdown-item @click="handleContentTransfer">My Transfer</b-dropdown-item>
+        <b-dropdown-item @click="handleContentIncome">My Income</b-dropdown-item>
+      </b-dropdown>
     </div>
-    <div class="input-search">
-      <div class="icon-seacrh">
-        <img src="@/assets/img/search-bar/search.png" alt="icon-search">
-      </div>
-      <input type="text" placeholder="Search receiver here" v-model="inputSearch">
-    </div>
-    <div class="sort">
-      <div class="badge badge-warning mr-1" @click="handleSearchSender(null, 'ASC')">Longest</div>
-      <div class="badge badge-primary" @click="handleSearchSender(null, 'DESC')">Latest</div>
-    </div>
-    <div class="card-container">
-      <div class="card-content">
-        <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id">
-          <div class="d-flex">
-            <div class="photo-receiver">
-              <img :src="data.receiverPhoto" alt="photo-receiver" @error="imgPlaceholder">
-            </div>
-            <div class="name-phone">
-              <h6>{{data.receiver}}</h6>
-              <p v-if="!data.receiver">{{data.receiverUsername}}</p>
-              <p>{{data.phoneReceiver}}</p>
+    <div class="container-transfer" v-show="contentTransfer">
+      <div class="wrapper-transfer" v-if="getTransactionSender.length > 0">
+        <div class="d-flex justify-content-between">
+        <h2>History Transfer</h2>
+        </div>
+        <div class="input-search">
+          <div class="icon-seacrh">
+            <img src="@/assets/img/search-bar/search.png" alt="icon-search">
+          </div>
+          <input type="text" placeholder="Search receiver here" v-model="inputSearch">
+        </div>
+        <div class="sort">
+          <div class="badge badge-warning mr-1" @click="handleSearchReceiver(null, 'ASC')">Longest</div>
+          <div class="badge badge-primary" @click="handleSearchReceiver(null, 'DESC')">Latest</div>
+        </div>
+        <div class="card-container">
+          <div class="card-content">
+            <div class="card-receiver" v-for="(data, index) in getTransactionSender" :key="data.id">
+              <div class="d-flex">
+                <div class="photo-receiver">
+                  <img :src="data.receiverPhoto" alt="photo-receiver" @error="imgPlaceholder">
+                </div>
+                <div class="name-phone">
+                  <h6>{{data.receiver}}</h6>
+                  <p v-if="!data.receiver">{{data.receiverUsername}}</p>
+                  <p>{{data.phoneReceiver}}</p>
+                </div>
+              </div>
+              <div class="right-card">
+                <div class="delete">
+                  <!-- <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button> -->
+                  <button class="badge badge-danger" ref="destroyCard" @click="coba(index)">Hapus</button>
+                </div>
+                <div class="data-receiver">
+                  {{ data.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
+                </div>
+              </div>
             </div>
           </div>
-          <div class="right-card">
-            <div class="delete">
-              <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
-            </div>
-            <div class="data-receiver">
-              {{ data.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
-            </div>
-          </div>
+          <nav aria-label="...">
+            <div v-if="getPagination.totalPage < 2"></div>
+            <ul class="pagination" v-else>
+              <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
+                <a class="page-link" @click.prevent="handleSearchReceiver(parseInt(getPagination.currentPage) - 1), null" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+              </li>
+              <li v-for="noPage in getPagination.totalPage" class="page-item" :class="[noPage == getPagination.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="handleSearchReceiver(noPage, null)" href="#">{{noPage}}</a></li>
+              <li class="page-item"  :class="[getPagination.currentPage == getPagination.totalPage ? 'disabled' : '']">
+                <a class="page-link" @click.prevent="handleSearchReceiver(parseInt(getPagination.currentPage) + 1), null" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
-      <nav aria-label="...">
-        <div v-if="getPagination.totalPage < 2"></div>
-        <ul class="pagination" v-else>
-          <li class="page-item" :class="[getPagination.currentPage == 1 ? 'disabled' : '']">
-            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) - 1), null" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-          </li>
-          <li v-for="noPage in getPagination.totalPage" class="page-item" :class="[noPage == getPagination.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="handleSearchSender(noPage, null)" href="#">{{noPage}}</a></li>
-          <li class="page-item"  :class="[getPagination.currentPage == getPagination.totalPage ? 'disabled' : '']">
-            <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPagination.currentPage) + 1), null" href="#">Next</a>
-          </li>
-        </ul>
-      </nav>
+      <div class="transfer-empty" v-else>
+        <h2>You've never made a transfer<br> Please go to transfer menu.</h2>
+      </div>
+    </div>
+    <div class="container-transfer" v-show="contentIncome">
+      <div class="wrapper-income" v-if="getDataIncome.length > 0">
+        <div class="d-flex justify-content-between">
+          <h2>History Income</h2>
+        </div>
+        <div class="input-search">
+          <div class="icon-seacrh">
+            <img src="@/assets/img/search-bar/search.png" alt="icon-search">
+          </div>
+          <input type="text" placeholder="Search sender here" v-model="inputSearchSender">
+        </div>
+        <div class="sort">
+          <!-- <div class="badge badge-warning mr-1" @click="handleSearchReceiver(null, 'ASC')">Longest</div>
+          <div class="badge badge-primary" @click="handleSearchReceiver(null, 'DESC')">Latest</div> -->
+        </div>
+        <div class="card-container">
+          <div class="card-content">
+            <div class="card-receiver" v-for="data in getDataIncome" :key="data.id">
+              <div class="d-flex">
+                <div class="photo-receiver">
+                  <img :src="data.senderPhoto" alt="photo-receiver" @error="imgPlaceholder">
+                </div>
+                <div class="name-phone">
+                  <h6>{{data.sender}}</h6>
+                  <p>{{data.phoneSender}}</p>
+                </div>
+              </div>
+              <div class="right-card">
+                <div class="delete">
+                  <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
+                </div>
+                <div class="data-receiver">
+                  {{ data.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <nav aria-label="...">
+            <div v-if="getPaginationIncome.totalPage < 2"></div>
+            <ul class="pagination" v-else>
+              <li class="page-item" :class="[getPaginationIncome.currentPage == 1 ? 'disabled' : '']">
+                <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPaginationIncome.currentPage) - 1), null" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+              </li>
+              <li v-for="noPage in getPaginationIncome.totalPage" class="page-item" :class="[noPage == getPaginationIncome.currentPage ? 'active' : '']" :key="noPage"><a class="page-link" @click.prevent="handleSearchSender(noPage, null)" href="#">{{noPage}}</a></li>
+              <li class="page-item"  :class="[getPaginationIncome.currentPage == getPaginationIncome.totalPage ? 'disabled' : '']">
+                <a class="page-link" @click.prevent="handleSearchSender(parseInt(getPaginationIncome.currentPage) + 1), null" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="transfer-empty" v-else>
+        <h2>No one has transferred to your account</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -62,15 +131,42 @@ export default {
   data: function () {
     return {
       inputText: '',
-      inputSearch: ''
+      inputSearch: '',
+      inputSearchSender: '',
+      contentTransfer: true,
+      contentIncome: false,
+      text: 'My Transfer'
     }
   },
   mounted () {
+    const payload = {
+      page: 1,
+      name: ''
+    }
+    this.getDataIncomes(payload)
+    this.handleSearchReceiver()
     this.handleSearchSender()
   },
   methods: {
-    ...mapActions(['getDataTransactionSender']),
-    handleSearchSender (pagination, handleSort) {
+    ...mapActions(['getDataTransactionSender', 'getDataIncomes']),
+    coba (index) {
+      console.log(index)
+      const result = this.$refs.destroyCard[index]
+      const result2 = this.$refs.destroyCard
+      console.log(result)
+      console.log(result2)
+    },
+    handleContentTransfer () {
+      this.text = 'My Transfer'
+      this.contentTransfer = !this.contentTransfer
+      this.contentIncome = !this.contentIncome
+    },
+    handleContentIncome () {
+      this.text = 'My Income'
+      this.contentTransfer = !this.contentTransfer
+      this.contentIncome = !this.contentIncome
+    },
+    handleSearchReceiver (pagination, handleSort) {
       console.log(this.sort)
       const payload = {
         pagination: pagination || 1,
@@ -79,17 +175,28 @@ export default {
       }
       this.getDataTransactionSender(payload)
     },
+    handleSearchSender (pagination) {
+      console.log(this.sort)
+      const payload = {
+        page: pagination || 1,
+        name: this.inputSearchSender
+      }
+      this.getDataIncomes(payload)
+    },
     imgPlaceholder (e) {
       e.target.src = 'https://via.placeholder.com/300'
     }
   },
   watch: {
     inputSearch: function () {
+      this.handleSearchReceiver()
+    },
+    inputSearchSender: function () {
       this.handleSearchSender()
     }
   },
   computed: {
-    ...mapGetters(['getPagination', 'getTransactionSender'])
+    ...mapGetters(['getPagination', 'getTransactionSender', 'getDataIncome', 'getPaginationIncome'])
   }
 }
 </script>
@@ -194,6 +301,17 @@ button.badge-danger{
   width: 100%;
   display: flex;
   justify-content: flex-end;
+}
+.menu-dropdown{
+  margin-left: -10px;
+}
+.transfer-empty{
+  width: 100%;
+  height: 455px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(179, 172, 172);
 }
 @media screen and (max-width: 360px) {
   /* .card-container{

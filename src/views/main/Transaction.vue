@@ -14,7 +14,7 @@
     <div class="type-amount">Type the amount you want to transfer and then press continue to the next steps</div>
     <div class="input-amount">
       <input type="text" name="amount" v-model="dataTransaction.amountTransfer" placeholder="0.00" autocomplete="off">
-      <h6>Rp. {{getData.balance}} Available</h6>
+      <h6>Rp. {{ getUser.balance | numFormat }} Available</h6>
       <div class="add-notes">
         <input type="text" name="notes" v-model="dataTransaction.notes" placeholder="add some notes" autocomplete="off">
       </div>
@@ -37,7 +37,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import Swal from 'sweetalert2'
 
 export default {
   name: 'Transaction',
@@ -62,52 +61,6 @@ export default {
     ...mapActions(['getDataUserId', 'addTransaction', 'getDataUser', 'updateProfile', 'updateProfileId']),
     getDataId () {
       this.getDataUserId(this.idReceiver)
-    },
-    insertTransaction (payload, amount) {
-      console.log(amount)
-      if (this.pin !== this.getUser.pin) {
-        Swal.fire(
-          'PIN wrong!!',
-          '',
-          'error'
-        )
-      } else if (amount > this.getUser.balance) {
-        Swal.fire(
-          'Your balance not enough',
-          `Your balance Rp. ${this.getUser.balance}`,
-          'error'
-        )
-      } else {
-        this.addTransaction(payload)
-          .then(res => {
-            const payloadAmount = {
-              balance: this.getUser.balance - amount
-            }
-            console.log(amount)
-            this.updateProfile(payloadAmount)
-              .then(res => {
-                // const amountInt = parseInt(amount)
-                const payloadReceiver = {
-                  id: this.userId.id,
-                  balance: this.userId.balance + amount
-                }
-                this.updateProfileId(payloadReceiver)
-                  .then(res => {
-                    console.log(res)
-                  })
-              })
-            const name = this.userId.name
-            Swal.fire(
-            `Transaction to ${name}`,
-            '',
-            'success'
-            )
-            this.$router.push({ name: 'Home' })
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
     },
     toDetailTransaction (payload, amount) {
       this.$router.push({ name: 'DetailTransaction', query: { userId: this.userId.id, userBalance: this.userId.balance, name: this.userId.name, userName: this.userId.username, notes: payload.notes, amount } })

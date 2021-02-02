@@ -13,11 +13,13 @@ export default new Vuex.Store({
     allUsers: [],
     dataUser: [],
     getTransactionSender: [],
+    dataIncome: [],
     listUsers: [],
     getUserId: [],
     pagination: {},
     paginationUser: {},
-    paginationAllUsers: {}
+    paginationAllUsers: {},
+    paginationIncome: {}
   },
   mutations: {
     SET_USER (state, payload) {
@@ -50,6 +52,12 @@ export default new Vuex.Store({
     },
     GET_LIST_USERS (state, payload) {
       state.listUsers = payload
+    },
+    SET_DATA_INCOME (state, payload) {
+      state.dataIncome = payload
+    },
+    SET_PAGINATION_INCOME (state, payload) {
+      state.paginationIncome = payload
     }
   },
   actions: {
@@ -58,7 +66,6 @@ export default new Vuex.Store({
         axios.get(`${process.env.VUE_APP_SERVICE_API}/users?page=${noPage}`)
           .then(res => {
             const result = res.data.result
-            console.log(result)
             context.commit('GET_ALL_USERS', result.users)
             context.commit('PAGINATION_ALL_USERS', result.pagination)
             resolve(res)
@@ -110,13 +117,26 @@ export default new Vuex.Store({
     },
     getDataTransactionSender (context, payload) {
       return new Promise((resolve, reject) => {
-        console.log(payload)
         axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/idSender?page=${payload.pagination}&name=${payload.name}&sort=${payload.sort}`)
           .then(res => {
             const result = res.data.result
-            console.log(result)
             context.commit('GET_TRANSACTION_SENDER', result.transaction)
             context.commit('SET_PAGINATION', result.pagination)
+            resolve(result)
+          })
+          .catch(err => {
+            reject(err.response.data.err.message)
+          })
+      })
+    },
+    getDataIncomes (context, payload) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/income?name=${payload.name}&page=${payload.page}`)
+          .then(res => {
+            const result = res.data.result
+            console.log('ini data income', result)
+            context.commit('SET_DATA_INCOME', result.result)
+            context.commit('SET_PAGINATION_INCOME', result.pagination)
             resolve(result)
           })
           .catch(err => {
@@ -193,6 +213,7 @@ export default new Vuex.Store({
           })
           .catch(err => {
             console.log(err)
+            reject(err)
           })
       })
     },
@@ -208,7 +229,7 @@ export default new Vuex.Store({
             resolve(result)
           })
           .catch(err => {
-            console.log(err)
+            console.log(err.response.data.err)
             reject(err)
           })
       })
@@ -292,7 +313,6 @@ export default new Vuex.Store({
       return state.getUserId
     },
     getPagination (state) {
-      console.log(state.pagination)
       return state.pagination
     },
     paginatonUsers (state) {
@@ -300,6 +320,13 @@ export default new Vuex.Store({
     },
     paginationAllUsers (state) {
       return state.paginationAllUsers
+    },
+    getPaginationIncome (state) {
+      console.log('ini apa', state.paginationIncome)
+      return state.paginationIncome
+    },
+    getDataIncome (state) {
+      return state.dataIncome
     }
   },
   modules: {

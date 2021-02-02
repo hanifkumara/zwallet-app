@@ -15,7 +15,7 @@
             <div class="col-md-5">
                 <div class="wrapper-right">
                     <div class="line"></div>
-                    <router-view v-on:login-handle="loginHandle" v-on:signup-handle="hanldeSignup" v-on:forgot-handle="forgothandle"/>
+                    <router-view v-on:login-handle="loginHandle" v-on:signup-handle="hanldeSignup" v-on:forgot-handle="forgothandle" :loading="loading"/>
                 </div>
             </div>
         </div>
@@ -28,6 +28,11 @@ import Swal from 'sweetalert2'
 
 export default {
   name: 'Auth',
+  data () {
+    return {
+      loading: false
+    }
+  },
   methods: {
     ...mapActions(['login', 'signup', 'forgotPassword']),
     loginHandle (payload) {
@@ -37,21 +42,27 @@ export default {
           'Please, try again!!',
           'error'
         )
-      } else if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
+        return
+      }
+      if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
         Swal.fire(
           'Format email invalid',
           'Please, try again!!',
           'error'
         )
-      } else if (payload.password.length <= 5) {
+        return
+      }
+      if (payload.password.length <= 5) {
         Swal.fire(
           'length password must be more than 5 char',
           'Please, try again!!',
           'error'
         )
       } else {
+        this.loading = true
         this.login(payload)
           .then(res => {
+            this.loading = false
             Swal.fire(
               'Login Success',
               'You clicked the button!',
@@ -60,6 +71,7 @@ export default {
             this.$router.push({ name: 'Home' })
           })
           .catch((err) => {
+            this.loading = false
             console.log(err)
             let { message } = err.response.data.err
             if (message === 'Email Unlisted!!') {
@@ -84,27 +96,35 @@ export default {
           'Please, try again!!',
           'error'
         )
-      } else if (payload.username.length <= 7) {
+        return
+      }
+      if (payload.username.length <= 7) {
         Swal.fire(
           'length username must be more than 7 char',
           'Please, try again!!',
           'error'
         )
-      } else if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
+        return
+      }
+      if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
         Swal.fire(
           'Format email invalid',
           'Please, try again!!',
           'error'
         )
-      } else if (payload.password.length <= 5) {
+        return
+      }
+      if (payload.password.length <= 5) {
         Swal.fire(
           'length password must be more than 5 char',
           'Please, try again!!',
           'error'
         )
       } else {
+        this.loading = true
         this.signup(payload)
           .then(res => {
+            this.loading = false
             Swal.fire(
               'Register Success',
               'Please check your email for verifycation!',
@@ -113,6 +133,7 @@ export default {
             this.$router.push({ name: 'Login' })
           })
           .catch((err) => {
+            this.loading = false
             const errMessage = err.response.data.err.message
             let message = ''
             console.log(errMessage)
@@ -122,9 +143,9 @@ export default {
               message = 'Email already exist!!'
             }
             Swal.fire(
-            `${message}`,
-            '',
-            'error'
+              `${message}`,
+              '',
+              'error'
             )
           })
       }

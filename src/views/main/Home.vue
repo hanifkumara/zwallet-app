@@ -4,7 +4,7 @@
       <div class="balance-left">
         <p>Balance</p>
         <router-link :to="{name: 'Balance'}">
-          <h3 style="color: white; margin: 10px 0">Rp. {{getUser.balance}}</h3>
+          <h3 style="color: white; margin: 10px 0">Rp. {{ getUser.balance | numFormat }}</h3>
         </router-link>
         <p>{{getUser.phone}}</p>
       </div>
@@ -51,28 +51,37 @@
       </div>
       <div class="history-container">
         <div class="title-history d-flex justify-content-between">
-          <h6>Transaction History</h6>
-          <router-link :to="{name: 'AllTransaction'}" v-if="!error">See all</router-link>
+          <h6>Transfer History</h6>
+          <router-link :to="{name: 'AllTransaction'}">See all</router-link>
         </div>
         <h2 v-if="error" class="error-transaction">You never have make Transaction</h2>
-        <div v-else>
-        <div class="contact-card"  v-for="data in getTransactionSender" :key="data.id">
-          <div class="card-left">
-            <div class="wrapper-photo">
-              <div class="photo">
-                <img :src="data.receiverPhoto" alt="photo-profile" @error="imgPlaceholder">
+        <div class="wrapper-contact-card" v-else>
+          <div class="contact-card"  v-for="(data, index) in getDataTransaction" :key="index">
+            <div class="card-left">
+              <div class="wrapper-photo">
+                <div class="photo" v-if="data.userReceiverId === idLogin">
+                  <img :src="data.senderPhoto" alt="photo-profile" @error="imgPlaceholder">
+                </div>
+                <div class="photo" v-else>
+                  <img :src="data.receiverPhoto" alt="photo-profile" @error="imgPlaceholder">
+                </div>
+              </div>
+              <div class="profile">
+                <h6 v-if="data.userReceiverId === idLogin">{{data.sender}}</h6>
+                <h6 v-else>{{data.receiver}}</h6>
+                <p v-if="data.userReceiverId === idLogin">Income</p>
+                <p v-else>Transfer</p>
               </div>
             </div>
-            <div class="profile">
-              <h6>{{data.receiver}}</h6>
-              <p v-if="!data.receiver">{{data.receiverUsername}}</p>
-              <p>Transfer</p>
+            <div class="card-right">
+              <p class="text-success amount"  v-if="data.userReceiverId === idLogin">
+                +Rp. {{ data.amountTransfer | numFormat }}
+              </p>
+              <p class="text-danger amount" v-else>
+                -Rp. {{ data.amountTransfer | numFormat }}
+              </p>
             </div>
           </div>
-          <p class="amount">
-            Rp.{{data.amountTransfer}}
-          </p>
-        </div>
         </div>
       </div>
     </div>
@@ -86,7 +95,8 @@ export default {
   name: 'Home',
   data: function () {
     return {
-      error: ''
+      error: '',
+      idLogin: localStorage.getItem('id')
     }
   },
   mounted () {
@@ -95,6 +105,9 @@ export default {
   },
   methods: {
     ...mapActions(['getDataUser', 'getDataTransactionSender']),
+    imgPlaceholder (e) {
+      e.target.src = 'https://via.placeholder.com/300'
+    },
     transactionSender () {
       const payload = {
         pagination: 1,
@@ -109,13 +122,13 @@ export default {
           this.error = err
           console.log(err)
         })
-    },
-    imgPlaceholder (e) {
-      e.target.src = 'https://via.placeholder.com/300'
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getTransactionSender'])
+    ...mapGetters(['getUser', 'getTransactionSender']),
+    getDataTransaction () {
+      return this.getTransactionSender.slice(0, 4)
+    }
   }
 }
 </script>
@@ -236,6 +249,17 @@ export default {
   color: grey;
   margin-top: 30%;
   text-align: center;
+}
+.profile{
+  width: 60%;
+}
+.card-right{
+  display: flex;
+  justify-content: flex-end;
+  width: 40%;
+}
+.card-righ > .amount {
+  width: 20%;
 }
 @media screen and (max-width: 960px) {
   .balance {

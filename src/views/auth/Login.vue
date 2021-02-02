@@ -15,7 +15,7 @@
           </div>
           <p class="text-danger" v-if="dataLogin.password.length >= 1 && dataLogin.password.length <= 5">length password must be more than 5 char</p>
           <router-link :to="{name : 'ForgotPassword'}" class="forgot-password">Forgot password ?</router-link>
-          <Button title="Login" type="submit" :class="[dataLogin.password.length > 5 ? 'primary' : '']" />
+          <Button title="Login" type="submit" :loading="loading" :class="[dataLogin.password.length > 5 ? 'primary' : '']" />
         </form>
         <div class="login-signup">Don’t have an account? Let’s <router-link to="signup" style="padding-left: 10px"> Sign Up</router-link></div>
     </div>
@@ -38,7 +38,8 @@ export default {
         password: ''
       }
     }
-  }
+  },
+  props: ['loading']
 }
 </script>
 

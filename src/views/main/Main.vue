@@ -34,12 +34,10 @@
       <div class="row mt-3">
         <div class="col-lg-3">
           <div class="dashboard">
-            <router-link :to="{name: 'Home'}">
-              <div class="icon">
-                <img src="../../../src/assets/img/icon/grid.png" alt="icon-dashbord">
-                <h6 >Dashboard</h6>
-              </div>
-            </router-link>
+            <div class="icon" @click="toHome">
+              <img src="../../../src/assets/img/icon/grid.png" alt="icon-dashbord">
+              <h6 >Dashboard</h6>
+            </div>
             <router-link :to="{name: 'ListUsers'}">
               <div class="icon">
                 <img src="../../../src/assets/img/icon/arrow-up.png" alt="icon-transfer">
@@ -65,7 +63,7 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <router-view v-on:update-profile="hanldeUpdate" v-on:delete-transaction="deleteTransaction" v-on:add-transaction="insertTransaction" v-on:search-transaction="handleSearch" :get-data="getUser" :user-id="userId" />
+          <router-view v-on:update-profile="hanldeUpdate" v-on:delete-transaction="handleDelete" v-on:add-transaction="insertTransaction" v-on:search-transaction="handleSearch" :get-data="getUser" :user-id="userId" :data-transaction="dataTransactionSender"/>
         </div>
       </div>
     </div>
@@ -95,13 +93,34 @@ import Swal from 'sweetalert2'
 
 export default {
   name: 'Main',
+  data () {
+    return {
+      dataTransactionSender: []
+    }
+  },
   mounted () {
     this.getDataUser()
     this.getListUsers()
     this.getAllUsers()
+    this.transactionSender()
   },
   methods: {
-    ...mapActions(['getDataUser', 'getAllUsers', 'updateProfile', 'getListUsers', 'addTransaction', 'deleteTransaction', 'searchTransaction', 'logout']),
+    ...mapActions(['getDataUser', 'getAllUsers', 'updateProfile', 'getListUsers', 'addTransaction', 'deleteTransaction', 'searchTransaction', 'getDataTransactionSender', 'getDataIncomes', 'logout']),
+    transactionSender () {
+      const payload = {
+        pagination: 1,
+        name: '',
+        sort: 'DESC'
+      }
+      this.getDataTransactionSender(payload)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          this.error = err
+          console.log(err)
+        })
+    },
     insertTransaction (payload) {
       console.log(payload)
       this.addTransaction(payload)
@@ -122,9 +141,11 @@ export default {
         })
     },
     handleDelete (payload) {
+      console.log('hallo', payload)
       this.deleteTransaction(payload)
         .then(res => {
           console.log(res)
+          this.transactionSender()
         })
         .catch(err => {
           console.log(err)
@@ -170,10 +191,14 @@ export default {
     },
     imgPlaceholder (e) {
       e.target.src = 'https://via.placeholder.com/300'
+    },
+    toHome () {
+      this.transactionSender()
+      this.$router.push({ name: 'Home' })
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'userId'])
+    ...mapGetters(['getUser', 'userId', 'getTransactionSender'])
   }
 }
 </script>

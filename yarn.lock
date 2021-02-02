@@ -6117,6 +6117,11 @@ num2fraction@^1.2.2:
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
   integrity sha1-b2gragJ6Tp3fpFZM0lidHU5mnt4=
 
+numeral@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/numeral/-/numeral-2.0.6.tgz#4ad080936d443c2561aed9f2197efffe25f4e506"
+  integrity sha1-StCAk21EPCVhrtnyGX7//iX05QY=
+
 oauth-sign@~0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
@@ -8713,6 +8718,11 @@ vue-eslint-parser@^7.0.0:
     espree "^6.2.1"
     esquery "^1.0.1"
     lodash "^4.17.15"
+
+vue-filter-number-format@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/vue-filter-number-format/-/vue-filter-number-format-3.0.1.tgz#0e0674d739ad5eee23837be683802ec72bf69079"
+  integrity sha512-Le6oGY5FcRxWYoN9vG7lkhTwprV5476ZonapQoNA4/fqz053SEaeZgtZmvEua4vDcj45GWmCeG34y2LnonqBwg==
 
 vue-functional-data-merge@^3.1.0:
   version "3.1.0"

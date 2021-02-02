@@ -6,6 +6,10 @@ import store from './store'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { BootstrapVue } from 'bootstrap-vue'
+import numeral from 'numeral'
+import numFormat from 'vue-filter-number-format'
+
+Vue.filter('numFormat', numFormat(numeral))
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
