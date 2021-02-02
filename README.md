@@ -118,5 +118,5 @@ My Email : hanifkumara00@gmail.com
 
 LinkedIn : [https://www.linkedin.com/in/hanifkumara/](https://www.linkedin.com/in/hanifkumara/)
 
-Project Link: [https://github.com/hanifkumara/zwallet-restfull-api](https://github.com/hanifkumara/zwallet-restfull-api)
+Project Link: [https://github.com/hanifkumara/zwallet-app](https://github.com/hanifkumara/zwallet-app)
 
