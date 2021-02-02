@@ -5,55 +5,87 @@
   </p>
 </p>
 
+<p align="center">
+    <br />
+    <a href="https://github.com/hanifkumara/zwallet-app"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://zwallet-app.netlify.app">View Demo</a>
+    ·
+    <a href="https://github.com/hanifkumara/zwallet-app/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/hanifkumara/zwallet-app/issues">Request Feature</a>
+  </p>
+</p>
+
+
 ## Table of Contents
 
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
-  * [Project setup](#project-setup)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
   * [Compiles and hot-reloads for development](#compiles-and-hot-reloads-for-development)
   * [Lints and fixes files](#lints-and-fixes-files)
   * [Customize configuration](#customize-configuration)
 * [Screenshots](#screenshots)
+* [Contributing](#contributing)
+* [Related Project](#related-project)
 * [Contact](#contact)
 
 ## About the Project
 
 Zwallet is an online payment application that is convenient, safe and easy. This project is the frontend of the zwallet application use Vuex
 
-## Getting Started
-Lets gets you started
+### Built With
+This is an example of how to list things you need to use the software and how to install them.
 
-## Project setup
+* [Express](https://expressjs.com/)
+
+* [VueJS](https://vuejs.org/)
+
+* [Bootstrap](https://nodejs.org/en/download/)
+
+## Getting Started
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+
+* [nodejs](https://nodejs.org/en/download/)
 
 ### Installation
 
 1. Clone the repo
-
 ```sh
-git clone https://github.com/hanifkumara/zwallet-restfull-api.git
+git clone https://github.com/hanifkumara/telegram-app.git
 ```
 2. Install NPM packages
 
 ```sh
-npm install
+yarn install
+```
+
+3. Add .env file at root folder project, and add following
+```sh
+VUE_APP_SERVICE_API= http://localhost:5000/v1
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+yarn run serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+yarn run build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn run lint
 ```
-
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
@@ -75,9 +107,16 @@ Contributions are what make the open source community such an amazing place to b
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request   
+
+## Related Project
+
+[https://github.com/hanifkumara/zwallet-restfull-api](https://github.com/hanifkumara/zwallet-restfull-api)
  
 ## Contact
+
 My Email : hanifkumara00@gmail.com
+
+LinkedIn : [https://www.linkedin.com/in/hanifkumara/](https://www.linkedin.com/in/hanifkumara/)
 
 Project Link: [https://github.com/hanifkumara/zwallet-restfull-api](https://github.com/hanifkumara/zwallet-restfull-api)
 
