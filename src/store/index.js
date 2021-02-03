@@ -17,9 +17,11 @@ export default new Vuex.Store({
     listUsers: [],
     getUserId: [],
     pagination: {},
+    detailTransaction: {},
     paginationUser: {},
     paginationAllUsers: {},
-    paginationIncome: {}
+    paginationIncome: {},
+    summaryTransaction: {}
   },
   mutations: {
     SET_USER (state, payload) {
@@ -58,6 +60,12 @@ export default new Vuex.Store({
     },
     SET_PAGINATION_INCOME (state, payload) {
       state.paginationIncome = payload
+    },
+    SET_SUMMARY_TRANSACTION (state, payload) {
+      state.summaryTransaction = payload
+    },
+    SET_DETAIL_TRANSACTION (state, payload) {
+      state.detailTransaction = payload
     }
   },
   actions: {
@@ -107,6 +115,7 @@ export default new Vuex.Store({
         axios.get(`${process.env.VUE_APP_SERVICE_API}/users/${payload}`)
           .then(res => {
             const result = res.data.result[0]
+            console.log(res)
             context.commit('GET_DATA_USER_ID', result)
             resolve(result)
           })
@@ -127,6 +136,21 @@ export default new Vuex.Store({
           })
           .catch(err => {
             reject(err.response.data.err.message)
+          })
+      })
+    },
+    setSummaryTransaction (context) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/summary`)
+          .then((res) => {
+            const result = res.data.result
+            context.commit('SET_SUMMARY_TRANSACTION', result)
+            resolve(result)
+          })
+          .catch((err) => {
+            const error = err.response.data.err.message
+            console.log('error summary transaction', error)
+            reject(error)
           })
       })
     },
@@ -216,6 +240,19 @@ export default new Vuex.Store({
           .catch(err => {
             console.log(err)
             reject(err)
+          })
+      })
+    },
+    setDetailTransaction (context, id) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.VUE_APP_SERVICE_API}/transaction/${id}`)
+          .then((res) => {
+            context.commit('SET_DETAIL_TRANSACTION', res.data.result[0])
+            resolve(res.data.result)
+          })
+          .catch(err => {
+            console.log(err.response.data.err)
+            reject(err.response.data.err)
           })
       })
     },
@@ -329,6 +366,12 @@ export default new Vuex.Store({
     },
     getDataIncome (state) {
       return state.dataIncome
+    },
+    getSummaryTransaction (state) {
+      return state.summaryTransaction
+    },
+    getDetailTransaction (state) {
+      return state.detailTransaction
     }
   },
   modules: {

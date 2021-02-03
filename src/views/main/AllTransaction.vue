@@ -23,7 +23,7 @@
         </div>
         <div class="card-container">
           <div class="card-content">
-            <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id">
+            <div class="card-receiver" v-for="data in getTransactionSender" :key="data.id" @click="detailTransaction(data.id)">
               <div class="d-flex">
                 <div class="photo-receiver">
                   <img :src="data.receiverPhoto" alt="photo-receiver" @error="imgPlaceholder">
@@ -35,16 +35,10 @@
                 </div>
               </div>
               <div class="right-card">
-                <div class="delete">
-                  <button class="badge badge-danger" @click.prevent="$emit('delete-transaction', data.id)">Hapus</button>
-                  <!-- <button class="badge badge-danger" ref="destroyCard" @click="coba(index)">Hapus</button> -->
-                </div>
                 <div class="data-receiver d-flex">
                   <p class="text-danger amount mr-2">
                     -Rp. {{ data.amountTransfer | numFormat }}
                   </p>
-                  |
-                  {{ data.createdAt | moment("dddd, MMMM Do YYYY") }}
                 </div>
               </div>
             </div>
@@ -84,7 +78,7 @@
         </div>
         <div class="card-container">
           <div class="card-content">
-            <div class="card-receiver" v-for="data in getDataIncome" :key="data.id">
+            <div class="card-receiver" v-for="data in getDataIncome" :key="data.id" @click="detailTransactionIncome(data.id)">
               <div class="d-flex">
                 <div class="photo-receiver">
                   <img :src="data.senderPhoto" alt="photo-receiver" @error="imgPlaceholder">
@@ -95,15 +89,10 @@
                 </div>
               </div>
               <div class="right-card">
-                <div class="delete">
-                  <button class="badge badge-danger" @click="handleDelete(data.id)">Hapus</button>
-                </div>
                 <div class="data-receiver d-flex">
                   <p class="text-success amount mr-2">
                     +Rp. {{ data.amountTransfer | numFormat }}
                   </p>
-                  |
-                  {{ data.createdAt | moment("dddd, MMMM Do YYYY") }}
                 </div>
               </div>
             </div>
@@ -152,11 +141,17 @@ export default {
       name: ''
     }
     this.getDataIncomes(payload)
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     // this.handleSearchReceiver()
     // this.handleSearchSender()
   },
   methods: {
-    ...mapActions(['getDataTransactionSender', 'getDataIncomes', 'deleteTransaction']),
+    ...mapActions(['getDataTransactionSender', 'getDataIncomes', 'deleteTransaction', 'setDetailTransaction', 'getDataUserId']),
     coba (index) {
       console.log(index)
       const result = this.$refs.destroyCard[index]
@@ -200,12 +195,12 @@ export default {
           }
           this.getDataIncomes(payload)
             .then((result) => {
+              this.transactionSender()
               console.log('ini result dataincome', result)
             })
             .catch((err) => {
               console.log(err)
             })
-          this.transactionSender()
         })
         .catch(err => {
           console.log(err)
@@ -221,6 +216,40 @@ export default {
     },
     imgPlaceholder (e) {
       e.target.src = 'https://via.placeholder.com/300'
+    },
+    detailTransaction (id) {
+      this.setDetailTransaction(id)
+        .then(res => {
+          this.getDataUserId(this.getDetailTransaction.userReceiverId)
+            .then((result) => {
+              console.og(result)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+          console.log(res)
+          this.$router.push({ name: 'Detail', params: { id } })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    detailTransactionIncome (id) {
+      this.setDetailTransaction(id)
+        .then(res => {
+          this.getDataUserId(this.getDetailTransaction.userSenderId)
+            .then((result) => {
+              console.og(result)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+          console.log(res)
+          this.$router.push({ name: 'Detail', params: { id } })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   watch: {
@@ -232,7 +261,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getPagination', 'getTransactionSender', 'getDataIncome', 'getPaginationIncome'])
+    ...mapGetters(['getPagination', 'getTransactionSender', 'getDataIncome', 'getPaginationIncome', 'getDetailTransaction'])
   }
 }
 </script>
@@ -280,8 +309,12 @@ a:hover{
   width: 100%;
   height: 100%;
 }
+.card-receiver:hover{
+  transform: scale(1.02);
+}
 .card-receiver{
   width: 100%;
+  cursor: pointer;
   padding: 10px 20px;
   background: #FFFFFF;
   box-shadow: 0px 7px 20px rgba(0, 0, 0, 0.05);

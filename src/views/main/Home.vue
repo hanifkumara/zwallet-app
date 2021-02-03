@@ -37,12 +37,12 @@
           <div class="arrow-down">
             <img src="@/assets/img/money/arrow-down.png" alt="arrow-down">
             <p>Income</p>
-            <h5>Rp.2.120.000</h5>
+            <h5>Rp.{{ getSummaryTransaction.resultIncome | numFormat }}</h5>
           </div>
           <div class="arrow-up">
             <img src="@/assets/img/money/arrow-up.png" alt="arrow-up">
             <p>Expense</p>
-            <h5>Rp.1.560.000</h5>
+            <h5>Rp.{{ getSummaryTransaction.resultTransfer | numFormat }}</h5>
           </div>
         </div>
         <div class="chart-image">
@@ -102,9 +102,10 @@ export default {
   mounted () {
     this.getDataUser()
     this.transactionSender()
+    this.setSummaryTransaction()
   },
   methods: {
-    ...mapActions(['getDataUser', 'getDataTransactionSender']),
+    ...mapActions(['getDataUser', 'getDataTransactionSender', 'setSummaryTransaction']),
     imgPlaceholder (e) {
       e.target.src = 'https://via.placeholder.com/300'
     },
@@ -125,7 +126,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getTransactionSender']),
+    ...mapGetters(['getUser', 'getTransactionSender', 'getSummaryTransaction']),
     getDataTransaction () {
       return this.getTransactionSender.slice(0, 4)
     }

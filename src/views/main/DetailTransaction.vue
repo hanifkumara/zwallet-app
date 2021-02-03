@@ -22,10 +22,7 @@
         <h4>{{ new Date() | moment("LLLL") }}</h4>
       </div>
       </div>
-      <div class="button d-flex justify-content-between align-items-center mt-3">
-      <button class="btn btn-success" @click="createPDF">
-        Print PDF
-      </button>
+      <div class="button d-flex justify-content-end align-items-center mt-3">
         <h6 v-b-modal.modal-1 class="btn btn-primary">Confirm</h6>
           <b-modal id="modal-1" title="BootstrapVue" hide-footer>
                 <div slot="modal-header">
@@ -55,8 +52,6 @@
 <script>
 import Swal from 'sweetalert2'
 import { mapActions, mapGetters } from 'vuex'
-import { jsPDF as PDF } from 'jspdf'
-import moment from 'moment'
 
 export default {
   name: 'DetailTransaction',
@@ -148,31 +143,6 @@ export default {
             console.log(err)
           })
       }
-    },
-    createPDF () {
-      const doc = new PDF()
-      doc.text('Transaction Detail', 80, 10)
-      doc.text('Trasnfer To', 10, 20)
-      if (this.name) {
-        doc.text(this.name, 10, 30)
-      } else {
-        doc.text(this.userName, 10, 30)
-      }
-      doc.text('Amount Transfer', 10, 40)
-      doc.text(this.amount, 10, 50)
-      doc.text('Notes', 10, 60)
-      if (!this.notes) {
-        doc.text('-', 10, 70)
-      } else {
-        doc.text(this.notes, 10, 70)
-      }
-      doc.text('Date & Time', 10, 80)
-      doc.text(`${moment(new Date()).format('LLL')}`, 10, 90)
-      doc.text('Receiver', 10, 130)
-      doc.text(`${this.dataReceiver.name}`, 10, 140)
-      doc.text('Sender', 140, 130)
-      doc.text(`${this.getUser.name}`, 140, 140)
-      doc.save('transaction.pdf')
     }
   },
   computed: {

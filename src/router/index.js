@@ -116,11 +116,6 @@ const routes = [
         component: ManagePhone
       },
       {
-        path: 'detail',
-        name: 'Detail',
-        component: Detail
-      },
-      {
         path: 'balance',
         name: 'Balance',
         component: Balance
@@ -154,6 +149,11 @@ const routes = [
         path: 'transaction/:idreceiver',
         name: 'Transaction',
         component: Transaction
+      },
+      {
+        path: 'detail/:id',
+        name: 'Detail',
+        component: Detail
       }
     ]
   }
